@@ -1,4 +1,4 @@
-# CEDV_HansAtWar
+# CEDV_AnimalsAtWar
 
 ## About the project
 
