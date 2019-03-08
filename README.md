@@ -1,4 +1,4 @@
-# CEDV_AnimalsAtWar
+# CEDV_AnimalsOfWar
 
 ## About the project
 
