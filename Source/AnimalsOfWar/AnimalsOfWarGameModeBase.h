@@ -16,6 +16,4 @@ class ANIMALSOFWAR_API AAnimalsOfWarGameModeBase : public AGameModeBase
 	
 public:
 	// TODO: define a method to know which player has won	
-	
-	
 };

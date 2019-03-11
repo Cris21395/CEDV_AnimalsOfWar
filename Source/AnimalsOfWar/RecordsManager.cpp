@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "RecordsManager.h"
-#include "AOWSaveGame.h"
+#include "AnimalsOfWarSaveGame.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -16,33 +16,33 @@ void ARecordsManager::BeginPlay()
 	if (UGameplayStatics::DoesSaveGameExist(SAVE_SLOT_NAME, USER_INDEX))
 	{
 		// Create an instance of a LoadGame object
-		AOWSaveGamePtr = Cast<UAOWSaveGame>(UGameplayStatics::LoadGameFromSlot(SAVE_SLOT_NAME, USER_INDEX));
+		AnimalsOfWarSaveGamePtr = Cast<UAnimalsOfWarSaveGame>(UGameplayStatics::LoadGameFromSlot(SAVE_SLOT_NAME, USER_INDEX));
 	}
 	else
 	{
 		// Create an instance of a SaveGame object
-		AOWSaveGamePtr = Cast<UAOWSaveGame>(UGameplayStatics::CreateSaveGameObject(UAOWSaveGame::StaticClass()));
+		AnimalsOfWarSaveGamePtr = Cast<UAnimalsOfWarSaveGame>(UGameplayStatics::CreateSaveGameObject(UAnimalsOfWarSaveGame::StaticClass()));
 	}
 }
 
 TMap<FString, int> ARecordsManager::GetRecords() const
 {
-	return AOWSaveGamePtr->Records;
+	return AnimalsOfWarSaveGamePtr->Records;
 }
 
 void ARecordsManager::SaveNewRecord(FString TeamName, int HitHans)
 {
 	// Add a new record
-	AOWSaveGamePtr->Records.Add(TeamName, HitHans);
+	AnimalsOfWarSaveGamePtr->Records.Add(TeamName, HitHans);
 
 	// Order the TMap regarding the HitHans
-	AOWSaveGamePtr->Records.ValueSort([](const int& A, const int& B)
+	AnimalsOfWarSaveGamePtr->Records.ValueSort([](const int& A, const int& B)
 	{
 		return A > B;
 	});
 
 	// Save the game
-	UGameplayStatics::SaveGameToSlot(AOWSaveGamePtr.Get(), AOWSaveGamePtr->SaveSlotName, AOWSaveGamePtr->UserIndex);
+	UGameplayStatics::SaveGameToSlot(AnimalsOfWarSaveGamePtr.Get(), AnimalsOfWarSaveGamePtr->SaveSlotName, AnimalsOfWarSaveGamePtr->UserIndex);
 
 }
 

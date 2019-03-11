@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "RecordsManager.generated.h"
 
-class UAOWSaveGame;
+class UAnimalsOfWarSaveGame;
 
 UCLASS()
 class ANIMALSOFWAR_API ARecordsManager : public AActor
@@ -37,6 +37,5 @@ public:
 private:
 	// Pointer to the custom SaveGame class
 	UPROPERTY()
-		TWeakObjectPtr<UAOWSaveGame> AOWSaveGamePtr;
-	
+		TWeakObjectPtr<UAnimalsOfWarSaveGame> AnimalsOfWarSaveGamePtr;
 };
