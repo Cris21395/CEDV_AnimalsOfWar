@@ -15,5 +15,7 @@ class ANIMALSOFWAR_API AAnimalsOfWarGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 	
 public:
+	AAnimalsOfWarGameModeBase();
+
 	// TODO: define a method to know which player has won	
 };
