@@ -8,6 +8,6 @@
 AAnimalsOfWarGameModeBase::AAnimalsOfWarGameModeBase() 
 {
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BP_AnimalsOfWarCharacter"));
-	if(PlayerPawnBPClass.Class != NULL)
+	if(PlayerPawnBPClass.Class != nullptr)
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 }
