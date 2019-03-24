@@ -6,6 +6,6 @@
 UENUM(BlueprintType) // BlueprintType is essential to include
 enum class EEvent : uint8
 {
-	EVENT_NONE			UMETA(DisplayName = "Event: None"),
-	EVENT_ERROR			UMETA(DisplayName = "Event: Error")
+	EVENT_NONE,
+	EVENT_ERROR
 };
