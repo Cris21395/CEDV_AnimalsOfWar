@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarCharacter.h"
+#include "Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -39,6 +40,11 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	/************************************************************************/
+
+	// Allow overlap events
+	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
+	// Register custom event
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAnimalsOfWarCharacter::BeginOverlap);
 
 }
 
@@ -91,5 +97,10 @@ void AAnimalsOfWarCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Begin");
 }
 

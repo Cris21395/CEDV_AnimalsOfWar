@@ -46,5 +46,15 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	/**********************************************************/
-	
+
+public:
+
+	// Handles the on actor end overlap event
+	UFUNCTION()
+		void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
+								AActor* OtherActor,
+								UPrimitiveComponent* OtherComp,
+								int32 OtherBodyIndex,
+								bool bFromSweep,
+								const FHitResult &SweepResult);
 };
