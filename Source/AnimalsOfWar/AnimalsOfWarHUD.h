@@ -19,7 +19,7 @@ public:
 
 	void BeginPlay() override;
 
-private:
+//private:
 	// Reference to HUD widget
 	UPROPERTY()
 		TWeakObjectPtr<class UUserWidget> pHUDWidget;
