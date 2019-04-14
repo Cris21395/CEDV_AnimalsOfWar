@@ -57,4 +57,8 @@ public:
 								int32 OtherBodyIndex,
 								bool bFromSweep,
 								const FHitResult &SweepResult);
+	
+	// Called when the character died
+	UFUNCTION()
+		void Die();
 };

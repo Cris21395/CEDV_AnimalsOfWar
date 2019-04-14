@@ -65,9 +65,9 @@ void AAnimalsOfWarCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-
-
 	/************************************************************************/
+
+
 }
 
 void AAnimalsOfWarCharacter::MoveForward(float Value)
@@ -102,5 +102,17 @@ void AAnimalsOfWarCharacter::MoveRight(float Value)
 void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Begin");
+	Die();
+}
+
+void AAnimalsOfWarCharacter::Die()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Died!");
+	// Start Die Animation
+
+	// Destroy Actor after delay
+	Destroy();
+	// Change Turn
+
 }
 
