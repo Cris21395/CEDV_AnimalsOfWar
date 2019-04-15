@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Runtime/Engine/Classes/Engine/TargetPoint.h"
+#include "Materials/Material.h"
 #include "GameFramework/Actor.h"
 #include "AnimalsOfWarManager.generated.h"
 
@@ -44,5 +45,5 @@ private:
 		TArray<ATargetPoint*> Player2TargetPoints;
 
 	// Spawns animals over the world
-	void SpawnAnimalsRandomly(ATargetPoint* TargetPoint);
+	void SpawnAnimalsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
 };

@@ -15,21 +15,20 @@ void AAnimalsOfWarManager::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UAnimalsOfWarGameInstance * GameInstance = (UAnimalsOfWarGameInstance*)GetWorld()->GetGameInstance();
 	AAnimalsOfWarGameModeBase * GameModeBase = (AAnimalsOfWarGameModeBase*)GetWorld()->GetAuthGameMode();
+
 	int NumbersPawnsToBeSpawns = GameModeBase->NumberOfPawns / 2;
 	for (int i = 0; i < NumbersPawnsToBeSpawns; i++)
 	{
-		SpawnAnimalsRandomly(Player1TargetPoints[i]);
-		SpawnAnimalsRandomly(Player2TargetPoints[i]);
+		SpawnAnimalsRandomly(Player1TargetPoints[i], nullptr /* GameInstance->GetPlayer1Material() */);
+		SpawnAnimalsRandomly(Player2TargetPoints[i], nullptr /* GameInstance->GetPlayer2Material() */);
 	}
 }
 
-void AAnimalsOfWarManager::SpawnAnimalsRandomly(ATargetPoint * TargetPoint)
+void AAnimalsOfWarManager::SpawnAnimalsRandomly(ATargetPoint * TargetPoint, UMaterial* Material)
 {
 	AAnimalsOfWarCharacter * Character = GetWorld()->SpawnActor<AAnimalsOfWarCharacter>
 		(ToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
-
-	/*static ConstructorHelpers::FObjectFinderOptional<UMaterial> Material(TEXT("Material'/Game/Meshes/Character_Veemon/mat1.mat1'"));
-	UAnimalsOfWarGameInstance * GameInstance = (UAnimalsOfWarGameInstance*)GetWorld()->GetGameInstance();
-	Character->GetMesh()->SetMaterial(2, Material.Get());*/
+	// Character->GetMesh()->SetMaterial(2, Material);
 }
