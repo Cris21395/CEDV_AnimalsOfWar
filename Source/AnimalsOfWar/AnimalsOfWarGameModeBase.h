@@ -17,8 +17,8 @@ class ANIMALSOFWAR_API AAnimalsOfWarGameModeBase : public AGameModeBase
 public:
 	AAnimalsOfWarGameModeBase();
 
-	// Defines the number of players in the game
-	int MaxPlayers = 2;
+	// Defines the number of pawns in the game
+	int NumberOfPawns = 8;
 
 	// TODO: define a method to know which player has won	
 };

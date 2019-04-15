@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "AnimalsOfWarCharacter.generated.h"
 
+/**
+ * Character class based on ThirdPersonCharacter template
+ */
 UCLASS()
 class ANIMALSOFWAR_API AAnimalsOfWarCharacter : public ACharacter
 {
@@ -18,12 +21,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	/****** CODE BASED ON THIRDPERSONCHARACTER TEMPLATE *******/
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate;
-
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -45,7 +46,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-	/**********************************************************/
 
 public:
 
