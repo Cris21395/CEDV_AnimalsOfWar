@@ -21,8 +21,8 @@ void AAnimalsOfWarManager::BeginPlay()
 	int NumbersPawnsToBeSpawns = GameModeBase->NumberOfPawns / 2;
 	for (int i = 0; i < NumbersPawnsToBeSpawns; i++)
 	{
-		SpawnAnimalsRandomly(Player1TargetPoints[i], nullptr /* GameInstance->GetPlayer1Material() */);
-		SpawnAnimalsRandomly(Player2TargetPoints[i], nullptr /* GameInstance->GetPlayer2Material() */);
+		SpawnAnimalsRandomly(Player1TargetPoints[i], GameInstance->GetPlayer1Material());
+		SpawnAnimalsRandomly(Player2TargetPoints[i], GameInstance->GetPlayer2Material());
 	}
 }
 
@@ -30,5 +30,5 @@ void AAnimalsOfWarManager::SpawnAnimalsRandomly(ATargetPoint * TargetPoint, UMat
 {
 	AAnimalsOfWarCharacter * Character = GetWorld()->SpawnActor<AAnimalsOfWarCharacter>
 		(ToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
-	// Character->GetMesh()->SetMaterial(2, Material);
+	Character->GetMesh()->SetMaterial(2, Material);
 }
