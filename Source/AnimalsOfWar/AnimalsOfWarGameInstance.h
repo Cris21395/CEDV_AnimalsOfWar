@@ -52,4 +52,19 @@ public:
 
 	// Get Player 2 material
 	class UMaterial* GetPlayer2Material() { return Player2MaterialPointer.Get(); }
+
+	// Set Text of Team1
+	UFUNCTION(BlueprintCallable, Category = TextTeam)
+		void setTeam1(FText Text1);
+	// Set Text of Team2
+	UFUNCTION(BlueprintCallable, Category = TextTeam)
+		void setTeam2(FText Text2);
+
+	//Get Text of Team1
+	UFUNCTION(BlueprintCallable, Category = TextTeam)
+		FText GetTeam1Text() { return Team1; }
+
+	// Get Text of Team2
+	UFUNCTION(BlueprintCallable, Category = TextTeam)
+		FText GetTeam2Text() { return Team2; }
 };
