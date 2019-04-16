@@ -8,6 +8,7 @@
 
 AAnimalsOfWarGameModeBase::AAnimalsOfWarGameModeBase() 
 {
+
 	PlayerControllerClass = AAnimalsOfWarPlayerController::StaticClass();
 	HUDClass = AAnimalsOfWarHUD::StaticClass();
 }

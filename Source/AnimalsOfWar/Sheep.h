@@ -17,7 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	ASheep();
 
-	UPROPERTY()
+	// StaticMesh component for the sheep
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Sheep, meta = (AllowPrivateAccess = "true"))
 		TWeakObjectPtr<UStaticMeshComponent> SheepMesh;
 
 protected:
@@ -28,6 +29,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+	// Returns Sheep Mesh subobject
+	FORCEINLINE class UStaticMeshComponent* GetSheepMesh() const { return SheepMesh.Get(); }
 };

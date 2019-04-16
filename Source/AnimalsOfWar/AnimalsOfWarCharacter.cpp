@@ -12,9 +12,6 @@
 // Sets default values
 AAnimalsOfWarCharacter::AAnimalsOfWarCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	//PrimaryActorTick.bCanEverTick = true;
-	/************* CODE BASED ON THIRDPERSONCHARACTER TEMPLATE **************/
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 
@@ -39,20 +36,17 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	/************************************************************************/
 
 	// Allow overlap events
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 	// Register custom event
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAnimalsOfWarCharacter::BeginOverlap);
-
 }
 
 // Called to bind functionality to input
 void AAnimalsOfWarCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	//Super::SetupPlayerInputComponent(PlayerInputComponent);
-	/************* CODE BASED ON THIRDPERSONCHARACTER TEMPLATE **************/
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
@@ -65,9 +59,6 @@ void AAnimalsOfWarCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	/************************************************************************/
-
-
 }
 
 void AAnimalsOfWarCharacter::MoveForward(float Value)

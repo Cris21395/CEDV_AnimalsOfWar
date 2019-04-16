@@ -9,6 +9,7 @@
 #include "AnimalsOfWarManager.generated.h"
 
 class AAnimalsOfWarCharacter;
+class ASheep;
 
 UCLASS()
 class ANIMALSOFWAR_API AAnimalsOfWarManager : public AActor
@@ -34,7 +35,10 @@ protected:
 private:
 	// Class to be associated in Editor to spawn character
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<AAnimalsOfWarCharacter> ToSpawn;
+		TSubclassOf<AAnimalsOfWarCharacter> CharacterToSpawn;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<ASheep> SheepToSpawn;
 
 	// Spawn points for player 1
 	UPROPERTY(EditAnywhere)
@@ -44,6 +48,13 @@ private:
 	UPROPERTY(EditAnywhere)
 		TArray<ATargetPoint*> Player2TargetPoints;
 
-	// Spawns animals over the world
-	void SpawnAnimalsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
+	// Spawn points for Sheeps
+	UPROPERTY(EditAnywhere)
+		TArray<ATargetPoint*> SheepTargetPoints;
+
+	// Spawns digimons over the world
+	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
+
+	// Spawns sheeps over the world
+	void SpawnSheepsRandomly(ATargetPoint* TargetPoint);
 };
