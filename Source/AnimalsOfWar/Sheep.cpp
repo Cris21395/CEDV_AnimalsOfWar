@@ -14,7 +14,7 @@ ASheep::ASheep()
 	SheepMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SheepMesh"));
 	SheepMesh->SetupAttachment(RootComponent);
 	SheepMesh->SetStaticMesh(ConstructorHelpers::FObjectFinder<UStaticMesh>
-		(TEXT("StaticMesh'/Game/Meshes/Sheep/sheep.sheep'")).Object);
+		(TEXT("StaticMesh'/Game/Meshes/Sheep/Sheep'")).Object);
 }
 
 // Called when the game starts or when spawned
