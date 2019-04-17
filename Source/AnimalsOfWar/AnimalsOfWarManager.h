@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AnimalsOfWarPlayerController.h"
 #include "Runtime/Engine/Classes/Engine/TargetPoint.h"
 #include "Materials/Material.h"
 #include "GameFramework/Actor.h"
@@ -27,6 +28,12 @@ public:
 	// Array used to store the Player1's characters
 	UPROPERTY()
 		TArray<APawn*> Player2Characters;
+	
+	//Player Controller 1
+	TWeakObjectPtr <AAnimalsOfWarPlayerController>  PlayerController1;
+
+	//Player Controller 2
+	TWeakObjectPtr <AAnimalsOfWarPlayerController>  PlayerController2;
 
 protected:
 	// Called when the game starts or when spawned

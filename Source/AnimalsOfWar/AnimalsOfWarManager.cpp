@@ -16,6 +16,9 @@ void AAnimalsOfWarManager::BeginPlay()
 	Super::BeginPlay();
 
 	UAnimalsOfWarGameInstance * GameInstance = (UAnimalsOfWarGameInstance*)GetWorld()->GetGameInstance();
+	//Player Controllers
+	PlayerController1 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	PlayerController2 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 1);
 
 	// It's the same which array to use. Both have the same number of elements
 	int NumbersPawnsToBeSpawned = Player1TargetPoints.Num();
@@ -32,6 +35,7 @@ void AAnimalsOfWarManager::BeginPlay()
 	{
 		SpawnSheepsRandomly(SheepTargetPoints[i]);
 	}
+	PlayerController1->Possess(Player1Characters[0]);
 }
 
 AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoint * TargetPoint, UMaterial* Material)

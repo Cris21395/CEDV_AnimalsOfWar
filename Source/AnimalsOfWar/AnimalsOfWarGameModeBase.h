@@ -20,5 +20,8 @@ public:
 	// Defines the number of players in the game
 	int MaxPlayers = 2;
 
+	// Begin Play Method
+	void BeginPlay() override;
+
 	// TODO: define a method to know which player has won	
 };
