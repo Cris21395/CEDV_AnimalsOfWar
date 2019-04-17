@@ -9,7 +9,7 @@
 
 AAnimalsOfWarGameModeBase::AAnimalsOfWarGameModeBase() 
 {
-
+	DefaultPawnClass = nullptr;
 	PlayerControllerClass = AAnimalsOfWarPlayerController::StaticClass();
 	HUDClass = AAnimalsOfWarHUD::StaticClass();
 }
