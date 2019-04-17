@@ -3,7 +3,9 @@
 #include "AnimalsOfWarManager.h"
 #include "AnimalsOfWarGameInstance.h"
 #include "AnimalsOfWarCharacter.h"
+#include "KitMedicine.h"
 #include "Sheep.h"
+#include "Grenade.h"
 #include "EngineMinimal.h"
 #include "EngineUtils.h"
 
@@ -35,6 +37,18 @@ void AAnimalsOfWarManager::BeginPlay()
 	{
 		SpawnSheepsRandomly(SheepTargetPoints[i]);
 	}
+	//Spawn KitMedicine
+	int NumberKitsToBeSpawned = KitTargetPoints.Num();
+	for (int i = 0; i < NumberKitsToBeSpawned; i++)
+	{
+		SpawnKitsRandomly(KitTargetPoints[i]);
+	}
+	//Spawn Grenades
+	int NumberGrenadesToBeSpawned = GrenadeTargetPoints.Num();
+	for (int i = 0; i < NumberGrenadesToBeSpawned; i++)
+	{
+		SpawnGrenadesRandomly(GrenadeTargetPoints[i]);
+	}
 	PlayerController1->Possess(Player1Characters[0]);
 }
 
@@ -50,4 +64,14 @@ AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoin
 void AAnimalsOfWarManager::SpawnSheepsRandomly(ATargetPoint * TargetPoint)
 {
 	GetWorld()->SpawnActor<ASheep>(SheepToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
+}
+
+void AAnimalsOfWarManager::SpawnKitsRandomly(ATargetPoint * TargetPoint)
+{
+	GetWorld()->SpawnActor<AKitMedicine>(KitToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
+}
+
+void AAnimalsOfWarManager::SpawnGrenadesRandomly(ATargetPoint * TargetPoint)
+{
+	GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
 }

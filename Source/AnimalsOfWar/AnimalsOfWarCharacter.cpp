@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarCharacter.h"
+#include "KitMedicine.h"
+#include "Sheep.h"
+#include "Grenade.h"
 #include "Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
@@ -92,8 +95,25 @@ void AAnimalsOfWarCharacter::MoveRight(float Value)
 
 void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Begin");
-	Die();
+	if (OtherActor->IsA(ASheep::StaticClass())) {
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Sheep");
+		numSheeps =+1;
+		OtherActor->Destroy();
+	}else if(OtherActor->IsA(AKitMedicine::StaticClass())){
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Kit Medicine");
+		//Increment life
+		OtherActor->Destroy();
+	}else if (OtherActor->IsA(AGrenade::StaticClass())) {
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Grenade");
+		numGrenates = +1;
+		OtherActor->Destroy();
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Begin");
+		Die();
+	}
+	
+	
 }
 
 void AAnimalsOfWarCharacter::Die()

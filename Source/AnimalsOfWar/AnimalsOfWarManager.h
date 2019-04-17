@@ -11,6 +11,8 @@
 
 class AAnimalsOfWarCharacter;
 class ASheep;
+class AKitMedicine;
+class AGrenade;
 
 UCLASS()
 class ANIMALSOFWAR_API AAnimalsOfWarManager : public AActor
@@ -47,6 +49,12 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<ASheep> SheepToSpawn;
 
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AKitMedicine> KitToSpawn;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<AGrenade> GrenadeToSpawn;
+
 	// Spawn points for player 1
 	UPROPERTY(EditAnywhere)
 		TArray<ATargetPoint*> Player1TargetPoints;
@@ -59,9 +67,24 @@ private:
 	UPROPERTY(EditAnywhere)
 		TArray<ATargetPoint*> SheepTargetPoints;
 
+	//Spawn point for Kits
+	UPROPERTY(EditAnywhere)
+		TArray<ATargetPoint*> KitTargetPoints;
+
+	//Spawn point for grenates
+	UPROPERTY(EditAnywhere)
+		TArray<ATargetPoint*> GrenadeTargetPoints;
+
 	// Spawns digimons over the world
 	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
 
 	// Spawns sheeps over the world
 	void SpawnSheepsRandomly(ATargetPoint* TargetPoint);
+
+	//Spawns kits over the world
+	void SpawnKitsRandomly(ATargetPoint* TargetPoint);
+
+	//Spawns grenades over the world
+	void SpawnGrenadesRandomly(ATargetPoint* TargetPoint);
+
 };
