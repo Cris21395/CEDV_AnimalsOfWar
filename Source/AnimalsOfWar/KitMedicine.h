@@ -18,8 +18,11 @@ public:
 	AKitMedicine();
 
 	// StaticMesh component for the KitMedicine
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category =KitMedicine, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = KitMedicine, meta = (AllowPrivateAccess = "true"))
 		TWeakObjectPtr<UStaticMeshComponent> KitMesh;
+
+	// Health applied to the character that uses this object
+	int const Health = 25;
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,7 +32,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Returns Sheep Mesh subobject
+	// Handles the collision when this object collides with other one
+	UFUNCTION()
+		void OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+	// Returns Kit Mesh subobject
 	FORCEINLINE class UStaticMeshComponent* GetKitMesh() const { return KitMesh.Get(); }
-	
 };

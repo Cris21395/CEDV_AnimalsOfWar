@@ -1,9 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarCharacter.h"
-#include "KitMedicine.h"
-#include "Sheep.h"
-#include "Grenade.h"
 #include "Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
@@ -13,7 +10,7 @@
 
 
 // Sets default values
-AAnimalsOfWarCharacter::AAnimalsOfWarCharacter()
+AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenates(0)
 {
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
@@ -93,37 +90,22 @@ void AAnimalsOfWarCharacter::MoveRight(float Value)
 	}
 }
 
-void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, 
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (OtherActor->IsA(ASheep::StaticClass())) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Sheep");
-		numSheeps =+1;
-		OtherActor->Destroy();
-	}else if(OtherActor->IsA(AKitMedicine::StaticClass())){
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Kit Medicine");
-		//Increment life
-		OtherActor->Destroy();
-	}else if (OtherActor->IsA(AGrenade::StaticClass())) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Grenade");
-		numGrenates = +1;
-		OtherActor->Destroy();
+	if (OtherActor) 
+	{
+		if (OtherComp->IsA(UBoxComponent::StaticClass()))
+		{
+			Die();
+		}
 	}
-	else {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Begin");
-		Die();
-	}
-	
-	
 }
 
 void AAnimalsOfWarCharacter::Die()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Died!");
 	// Start Die Animation
 
 	// Destroy Actor after delay
 	Destroy();
-	// Change Turn
-
 }
-

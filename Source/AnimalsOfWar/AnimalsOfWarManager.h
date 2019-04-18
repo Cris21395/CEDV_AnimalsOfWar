@@ -46,12 +46,15 @@ private:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AAnimalsOfWarCharacter> CharacterToSpawn;
 
+	// Class to be associated in Editor to spawn sheep
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<ASheep> SheepToSpawn;
 
+	// Class to be associated in Editor to spawn kit medicine
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AKitMedicine> KitToSpawn;
 
+	// Class to be associated in Editor to spawn grenade
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AGrenade> GrenadeToSpawn;
 
@@ -75,9 +78,6 @@ private:
 	UPROPERTY(EditAnywhere)
 		TArray<ATargetPoint*> GrenadeTargetPoints;
 
-	// Spawns digimons over the world
-	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
-
 	// Spawns sheeps over the world
 	void SpawnSheepsRandomly(ATargetPoint* TargetPoint);
 
@@ -87,4 +87,6 @@ private:
 	//Spawns grenades over the world
 	void SpawnGrenadesRandomly(ATargetPoint* TargetPoint);
 
+	// Spawns digimons over the world
+	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
 };

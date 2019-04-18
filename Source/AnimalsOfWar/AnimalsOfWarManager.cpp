@@ -37,12 +37,14 @@ void AAnimalsOfWarManager::BeginPlay()
 	{
 		SpawnSheepsRandomly(SheepTargetPoints[i]);
 	}
+
 	//Spawn KitMedicine
 	int NumberKitsToBeSpawned = KitTargetPoints.Num();
 	for (int i = 0; i < NumberKitsToBeSpawned; i++)
 	{
 		SpawnKitsRandomly(KitTargetPoints[i]);
 	}
+
 	//Spawn Grenades
 	int NumberGrenadesToBeSpawned = GrenadeTargetPoints.Num();
 	for (int i = 0; i < NumberGrenadesToBeSpawned; i++)

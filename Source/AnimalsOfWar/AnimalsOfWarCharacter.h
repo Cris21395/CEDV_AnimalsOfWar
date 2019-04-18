@@ -22,10 +22,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//Number of sheeps
-	int numSheeps;
+	int NumSheeps;
 
 	//Number of grenates
-	int numGrenates;
+	int NumGrenates;
+
+	// Character's life
+	float Life;
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -54,8 +57,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 public:
-
-	// Handles the on actor end overlap event
+	// Handles the event when actor overlaps with other object
 	UFUNCTION()
 		void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 								AActor* OtherActor,
@@ -64,7 +66,7 @@ public:
 								bool bFromSweep,
 								const FHitResult &SweepResult);
 	
-	// Called when the character died
+	// Called when character has to die
 	UFUNCTION()
 		void Die();
 };

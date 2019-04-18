@@ -18,10 +18,15 @@ public:
 	AAnimalsOfWarGameModeBase();
 
 	// Defines the number of players in the game
-	int MaxPlayers = 2;
+	int const MaxPlayers = 2;
 
+protected:
 	// Begin Play Method
-	void BeginPlay() override;
+	virtual void BeginPlay() override;
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 	// TODO: define a method to know which player has won	
 };
