@@ -1,34 +1,54 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarHUD.h"
-
+#include "TextWidgetTypes.h"
+#include "TextBlock.h"
 #include "EngineUtils.h"
 #include "Blueprint/UserWidget.h"
 
-AAnimalsOfWarHUD::AAnimalsOfWarHUD(){
-	/*struct FConstructorStatics
-	{
-		ConstructorHelpers::FClassFinder<UUserWidget> HUDWidgetObject;
-		FConstructorStatics()
-			: HUDWidgetObject(TEXT("/Game/Blueprints/UI/BP_HUDCharacter"))
-		{
-		}
-	};
-	static FConstructorStatics ConstructorStatics;*/
+AAnimalsOfWarHUD::AAnimalsOfWarHUD()
+{
 	static ConstructorHelpers::FClassFinder<UUserWidget> HUDWidgetObject (TEXT("/Game/Blueprints/UI/BP_HUDCharacter"));
-	
+
 	// Save pointer to widgets
-	//pHUDWidgetClass = ConstructorStatics.HUDWidgetObject.Class;
-	pHUDWidgetClass = HUDWidgetObject.Class;
+	if (HUDWidgetObject.Class) 
+	{
+		pHUDWidgetClass = HUDWidgetObject.Class;
+	}
 }
 
 void AAnimalsOfWarHUD::BeginPlay() 
 {
-	// Add widget to viewport
-	if (pHUDWidgetClass) {
-		pHUDWidget = CreateWidget<UUserWidget>(this->GetOwningPlayerController(), this->pHUDWidgetClass);
-		pHUDWidget->AddToViewport();
+	Super::BeginPlay();
+
+	if (pHUDWidgetClass) // Add widget to viewport and get references
+	{
+		// Create widget and save it in the pointer
+		pHUDWidget = CreateWidget<UUserWidget>(GetOwningPlayerController(), pHUDWidgetClass);
+
+		if (pHUDWidget.IsValid()) 
+		{
+			pHUDWidget->AddToViewport();
+
+			// Retrieve TextBlock widgets
+			pNumGrenadesText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumGrenades");
+			pNumSheepsText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumSheeps");
+		}
 	}
 }
 
+void AAnimalsOfWarHUD::IncreaseNumSheeps(int NumSheeps)
+{
+	if (pNumSheepsText.IsValid())
+	{
+		pNumSheepsText->SetText(FText::FromString(FString::FromInt(NumSheeps)));
+	}
+}
 
+void AAnimalsOfWarHUD::IncreaseNumGrenades(int NumGrenades)
+{
+	if (pNumGrenadesText.IsValid())
+	{
+		pNumGrenadesText->SetText(FText::FromString(FString::FromInt(NumGrenades)));
+	}
+}

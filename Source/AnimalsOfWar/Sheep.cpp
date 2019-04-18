@@ -20,7 +20,7 @@ ASheep::ASheep()
 		ConstructorHelpers::FObjectFinderOptional<UParticleSystem> Explosion_Particle_System;
 		ConstructorHelpers::FObjectFinderOptional<USoundBase> Audio_Explosion;
 		FConstructorStatics()
-			: Mesh(TEXT("StaticMesh'/Game/Meshes/Sheep/Sheep'"))
+			: Mesh(TEXT("StaticMesh'/Game/Meshes/Sheep/sheep.sheep'"))
 			, Explosion_Particle_System(TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"))
 			, Audio_Explosion(TEXT("/Game/StarterContent/Audio/Explosion01.Explosion01"))
 		{

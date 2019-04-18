@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "AnimalsOfWarCharacter.generated.h"
 
+class AGrenade;
+
 /**
  * Character class based on ThirdPersonCharacter template
  */
@@ -21,16 +23,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Number of sheeps
-	int NumSheeps;
-
-	//Number of grenates
-	int NumGrenates;
-
-	// Character's life
-	float Life;
-
-public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate;
@@ -43,30 +35,63 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
+	// Number of sheeps
+	int NumSheeps;
+
+	// Number of grenates
+	int NumGrenades;
+
+	// Character's life
+	float Life;
+
 protected:
+	/** Called every frame */
+	void Tick(float DeltaSeconds) override;
+
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
 
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+private:
+	/** Properties used to throw objects */
+	bool bPressedThrowGrenade;
+	bool bPressedThrowSheep;
+	float ForceToThrow;
+
+	/** Called for getting force to throw a grenade */
+	UFUNCTION()
+		void ForceToThrowGrenade();
+
+	/** Called for getting force to throw a sheep */
+	UFUNCTION()
+		void ForceToThrowSheep();
+
+	/** Called for throwing a grenade */
+	UFUNCTION()
+		void ThrowGrenade();
+
+	/** Called for throwing a sheep */
+	UFUNCTION()
+		void ThrowSheep();
 
 public:
 	// Handles the event when actor overlaps with other object
 	UFUNCTION()
 		void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
-								AActor* OtherActor,
-								UPrimitiveComponent* OtherComp,
-								int32 OtherBodyIndex,
-								bool bFromSweep,
-								const FHitResult &SweepResult);
-	
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex,
+			bool bFromSweep,
+			const FHitResult &SweepResult);
+
 	// Called when character has to die
 	UFUNCTION()
 		void Die();
+
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };

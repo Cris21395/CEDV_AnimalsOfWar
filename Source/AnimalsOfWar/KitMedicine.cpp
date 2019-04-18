@@ -17,7 +17,7 @@ AKitMedicine::AKitMedicine()
 	KitMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KitMesh"));
 	KitMesh->SetupAttachment(RootComponent);
 	KitMesh->SetStaticMesh(ConstructorHelpers::FObjectFinder<UStaticMesh>
-		(TEXT("StaticMesh'/Game/Meshes/KitMedicine/First_Aid_Kit'")).Object);
+		(TEXT("StaticMesh'/Game/Meshes/KitMedicine/First_Aid_Kit.First_Aid_Kit'")).Object);
 
 	KitMesh->SetCollisionProfileName(UCollisionProfile::BlockAll_ProfileName);
 
@@ -46,10 +46,11 @@ void AKitMedicine::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalIm
 			AAnimalsOfWarCharacter* Character = (AAnimalsOfWarCharacter*)OtherActor;
 
 			// Don't add extra life
-			if (Character->Life <= 100)
+			if (Character->Life < 100) 
+			{
 				Character->Life += Health;
-
-			Destroy();
+				Destroy();
+			}
 		}
 	}
 }

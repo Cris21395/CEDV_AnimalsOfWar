@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarCharacter.h"
+#include "Grenade.h"
+#include "Sheep.h"
 #include "Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
@@ -10,8 +12,12 @@
 
 
 // Sets default values
-AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenates(0)
+AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenades(0), ForceToThrow(0.0), bPressedThrowGrenade(false),
+	bPressedThrowSheep(false)
 {
+	// Set this actor to call Tick() every frame.
+	PrimaryActorTick.bCanEverTick = true;
+
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 
@@ -34,7 +40,8 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumG
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	// Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	// Allow overlap events
@@ -50,6 +57,10 @@ void AAnimalsOfWarCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	PlayerInputComponent->BindAction("ThrowGrenade", IE_Pressed, this, &AAnimalsOfWarCharacter::ForceToThrowGrenade);
+	PlayerInputComponent->BindAction("ThrowSheep", IE_Released, this, &AAnimalsOfWarCharacter::ForceToThrowSheep);
+	PlayerInputComponent->BindAction("ThrowGrenade", IE_Released, this, &AAnimalsOfWarCharacter::ThrowGrenade);
+	PlayerInputComponent->BindAction("ThrowSheep", IE_Released, this, &AAnimalsOfWarCharacter::ThrowSheep);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AAnimalsOfWarCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AAnimalsOfWarCharacter::MoveRight);
@@ -59,6 +70,22 @@ void AAnimalsOfWarCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+}
+
+// Called every frame
+void AAnimalsOfWarCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	// It's not possible to throw grenades and sheeps at the same time
+	if (bPressedThrowGrenade)
+	{
+		ForceToThrow += DeltaSeconds;
+	}
+	else if (bPressedThrowGrenade) 
+	{
+		ForceToThrow += DeltaSeconds;
+	}
 }
 
 void AAnimalsOfWarCharacter::MoveForward(float Value)
@@ -87,6 +114,46 @@ void AAnimalsOfWarCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+
+void AAnimalsOfWarCharacter::ForceToThrowGrenade()
+{
+	bPressedThrowGrenade = true;
+	ForceToThrow = 0.0f;
+}
+
+void AAnimalsOfWarCharacter::ForceToThrowSheep()
+{
+	bPressedThrowSheep = true;
+	ForceToThrow = 0.0f;
+}
+
+void AAnimalsOfWarCharacter::ThrowGrenade()
+{
+	if (NumGrenades > 0)
+	{
+		FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 250.0f;
+		FRotator SpawnRotation = GetActorRotation();
+
+		GetWorld()->SpawnActor(AGrenade::StaticClass(), &SpawnLocation, &SpawnRotation);
+
+		NumGrenades -= 1;
+		bPressedThrowGrenade = false;
+	}
+}
+
+void AAnimalsOfWarCharacter::ThrowSheep()
+{
+	if (NumSheeps > 0)
+	{
+		FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * ForceToThrow;
+		FRotator SpawnRotation = GetActorRotation();
+
+		GetWorld()->SpawnActor(ASheep::StaticClass(), &SpawnLocation, &SpawnRotation);
+
+		NumSheeps -= 1;
+		bPressedThrowSheep = false;
 	}
 }
 

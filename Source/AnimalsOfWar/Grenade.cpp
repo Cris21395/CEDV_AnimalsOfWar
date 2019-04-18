@@ -20,7 +20,7 @@ AGrenade::AGrenade()
 		ConstructorHelpers::FObjectFinderOptional<UParticleSystem> Explosion_Particle_System;
 		ConstructorHelpers::FObjectFinderOptional<USoundBase> Audio_Explosion;
 		FConstructorStatics()
-			: Mesh(TEXT("StaticMesh'/Game/Meshes/Grenade/Grenade'"))
+			: Mesh(TEXT("StaticMesh'/Game/Meshes/Grenade/Grenade.Grenade'"))
 			, Explosion_Particle_System(TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"))
 			, Audio_Explosion(TEXT("/Game/StarterContent/Audio/Explosion01.Explosion01"))
 		{
@@ -67,7 +67,7 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 			// If Grenade has been thrown, we execute this logic
 			if (!NormalImpulse.IsZero())
 			{
-				// Fire explosion
+				// Fire explosion if grenades collides with character by being thrown
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
 
 				// Apply damage to character
@@ -77,13 +77,18 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 				if (Character->Life <= 0)
 					Character->Die();
 			}
-			// Otherwise, we increment the number of grenates
+			// Otherwise, we increment the number of grenades
 			else
 			{
-				Character->NumGrenates += 1;
+				Character->NumGrenades += 1;
 			}
-
-			Destroy();
 		}
+		else
+		{
+			// Fire explosion if grenades collides with other thing is not character
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
+		}
+
+		Destroy();
 	}
 }
