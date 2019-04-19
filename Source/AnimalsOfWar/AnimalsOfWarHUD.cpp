@@ -4,6 +4,7 @@
 #include "TextWidgetTypes.h"
 #include "TextBlock.h"
 #include "EngineUtils.h"
+#include "Engine.h"
 #include "Blueprint/UserWidget.h"
 
 AAnimalsOfWarHUD::AAnimalsOfWarHUD()

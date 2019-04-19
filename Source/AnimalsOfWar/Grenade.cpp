@@ -80,7 +80,8 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 			// Otherwise, we increment the number of grenades
 			else
 			{
-				Character->NumGrenades += 1;
+				//Character->NumGrenades += 1;
+				Character->IncreaseGrenadeCounter();
 			}
 		}
 		else

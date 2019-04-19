@@ -3,6 +3,7 @@
 #include "AnimalsOfWarCharacter.h"
 #include "Grenade.h"
 #include "Sheep.h"
+#include "AnimalsOfWarHUD.h"
 #include "Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
@@ -48,6 +49,7 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumG
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 	// Register custom event
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAnimalsOfWarCharacter::BeginOverlap);
+
 }
 
 // Called to bind functionality to input
@@ -183,6 +185,8 @@ void AAnimalsOfWarCharacter::IncreaseSheepCounter()
 	NumSheeps += 1;
 
 	// Notify HUD
+	AAnimalsOfWarHUD* hud = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	hud->IncreaseNumSheeps(NumSheeps);
 
 }
 
@@ -192,5 +196,7 @@ void AAnimalsOfWarCharacter::IncreaseGrenadeCounter()
 	NumGrenades += 1;
 
 	// Notify HUD
-	//GetWorld()->GetPlayerController() // look for the active one
+	// TO DO: look for the active one (the one belonging to this character)
+	AAnimalsOfWarHUD* hud = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	hud->IncreaseNumGrenades(NumGrenades);
 }

@@ -7,6 +7,7 @@
 #include "AnimalsOfWarCharacter.generated.h"
 
 class AGrenade;
+class AAnimalsOfWarHUD;
 
 /**
  * Character class based on ThirdPersonCharacter template
@@ -77,7 +78,7 @@ private:
 		void ThrowSheep();
 
 public:
-	// Handles the event when actor overlaps with other object
+	/** Handles the event when actor overlaps with other object **/
 	UFUNCTION()
 		void BeginOverlap(UPrimitiveComponent* OverlappedComponent,
 			AActor* OtherActor,
@@ -86,15 +87,15 @@ public:
 			bool bFromSweep,
 			const FHitResult &SweepResult);
 
-	// Called when character has to die
+	/** Called when character has to die **/
 	UFUNCTION()
 		void Die();
 
-	// Called when a sheep is picked up
+	/** Called when a sheep is picked up **/
 	UFUNCTION()
 		void IncreaseSheepCounter();
 
-	// Called when a grenade is picked up
+	/** Called when a grenade is picked up **/
 	UFUNCTION()
 		void IncreaseGrenadeCounter();
 
