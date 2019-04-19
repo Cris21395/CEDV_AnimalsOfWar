@@ -78,7 +78,7 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 			// Otherwise, we increment the number of grenates
 			else
 			{
-				Character->NumSheeps += 1;
+				Character->IncreaseSheepCounter();
 			}
 
 			Destroy();

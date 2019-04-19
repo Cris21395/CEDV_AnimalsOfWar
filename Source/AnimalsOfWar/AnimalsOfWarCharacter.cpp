@@ -176,3 +176,21 @@ void AAnimalsOfWarCharacter::Die()
 	// Destroy Actor after delay
 	Destroy();
 }
+
+void AAnimalsOfWarCharacter::IncreaseSheepCounter()
+{
+	// Increase Counter
+	NumSheeps += 1;
+
+	// Notify HUD
+
+}
+
+void AAnimalsOfWarCharacter::IncreaseGrenadeCounter()
+{
+	// Increase Counter
+	NumGrenades += 1;
+
+	// Notify HUD
+	//GetWorld()->GetPlayerController() // look for the active one
+}

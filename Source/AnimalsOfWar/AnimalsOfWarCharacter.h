@@ -90,6 +90,14 @@ public:
 	UFUNCTION()
 		void Die();
 
+	// Called when a sheep is picked up
+	UFUNCTION()
+		void IncreaseSheepCounter();
+
+	// Called when a grenade is picked up
+	UFUNCTION()
+		void IncreaseGrenadeCounter();
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
