@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Grenade.h"
-#include "EngineMinimal.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Engine.h"
 #include "AnimalsOfWarCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
@@ -38,6 +39,16 @@ AGrenade::AGrenade()
 	ExplosionParticleSystem = ConstructorStatics.Explosion_Particle_System.Get();
 	AudioExplosion = ConstructorStatics.Audio_Explosion.Get();
 
+	ProjectileComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
+	//ProjectileComponent = NewObject<UProjectileMovementComponent>(this, UProjectileMovementComponent::StaticClass());
+	ProjectileComponent->SetAutoActivate(false);
+	ProjectileComponent->UpdatedComponent = GrenadeMesh.Get();
+	ProjectileComponent->InitialSpeed = 10.f;
+	ProjectileComponent->MaxSpeed = 30.f;
+	ProjectileComponent->bRotationFollowsVelocity = true;
+	ProjectileComponent->bShouldBounce = true;
+	
+
 	// Register OnHit event
 	OnActorHit.AddDynamic(this, &AGrenade::OnHit);
 }
@@ -54,6 +65,19 @@ void AGrenade::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AGrenade::MakeThrowable()
+{
+	// Projectile Movement Component Setup
+	//ProjectileComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
+	//ProjectileComponent = NewObject<UProjectileMovementComponent>(this, UProjectileMovementComponent::StaticClass());
+	//ProjectileComponent->UpdatedComponent = GrenadeMesh.Get();
+	//ProjectileComponent->InitialSpeed = 10.f;
+	//ProjectileComponent->MaxSpeed = 30.f;
+	//ProjectileComponent->bRotationFollowsVelocity = true;
+	//ProjectileComponent->bShouldBounce = true;
+	ProjectileComponent->SetActive(true, true);
 }
 
 void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
@@ -80,7 +104,6 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 			// Otherwise, we increment the number of grenades
 			else
 			{
-				//Character->NumGrenades += 1;
 				Character->IncreaseGrenadeCounter();
 			}
 		}

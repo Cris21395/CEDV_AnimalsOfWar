@@ -21,6 +21,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Grenade, meta = (AllowPrivateAccess = "true"))
 		TWeakObjectPtr<UStaticMeshComponent> GrenadeMesh;
 
+	// Component for the projectile movement
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Grenade, meta = (AllowPrivateAccess = "true"))
+		class UProjectileMovementComponent* ProjectileComponent;
+
+
 	// Damage caused when a grenade hits character
 	int const Damage = 50;
 
@@ -40,6 +45,9 @@ private:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+		void MakeThrowable();
 
 	// Handles the collision when this object collides with other one
 	UFUNCTION()

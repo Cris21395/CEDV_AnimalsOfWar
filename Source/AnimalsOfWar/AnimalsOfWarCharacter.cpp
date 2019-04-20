@@ -2,6 +2,7 @@
 
 #include "AnimalsOfWarCharacter.h"
 #include "Grenade.h"
+#include "ThrowableGrenade.h"
 #include "Sheep.h"
 #include "AnimalsOfWarHUD.h"
 #include "Engine.h"
@@ -13,7 +14,7 @@
 
 
 // Sets default values
-AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenades(0), ForceToThrow(0.0), bPressedThrowGrenade(false),
+AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenades(3), ForceToThrow(0.0), bPressedThrowGrenade(false),
 	bPressedThrowSheep(false)
 {
 	// Set this actor to call Tick() every frame.
@@ -138,10 +139,14 @@ void AAnimalsOfWarCharacter::ThrowGrenade()
 		FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 250.0f;
 		FRotator SpawnRotation = GetActorRotation();
 
-		GetWorld()->SpawnActor(AGrenade::StaticClass(), &SpawnLocation, &SpawnRotation);
-
+		AGrenade* grenade =(AGrenade*) GetWorld()->SpawnActor(AGrenade::StaticClass(), &SpawnLocation, &SpawnRotation);
+		//AThrowableGrenade* grenade = (AThrowableGrenade*)GetWorld()->SpawnActor(AThrowableGrenade::StaticClass(), &SpawnLocation, &SpawnRotation);
+		grenade->MakeThrowable();
+		
 		NumGrenades -= 1;
 		bPressedThrowGrenade = false;
+
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Granada VA!");
 	}
 }
 
@@ -156,6 +161,8 @@ void AAnimalsOfWarCharacter::ThrowSheep()
 
 		NumSheeps -= 1;
 		bPressedThrowSheep = false;
+
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Oveja VA!");
 	}
 }
 
