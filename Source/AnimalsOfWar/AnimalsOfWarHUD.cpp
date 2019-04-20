@@ -38,7 +38,7 @@ void AAnimalsOfWarHUD::BeginPlay()
 	}
 }
 
-void AAnimalsOfWarHUD::IncreaseNumSheeps(int NumSheeps)
+void AAnimalsOfWarHUD::SetNumSheeps(int NumSheeps)
 {
 	if (pNumSheepsText.IsValid())
 	{
@@ -46,7 +46,7 @@ void AAnimalsOfWarHUD::IncreaseNumSheeps(int NumSheeps)
 	}
 }
 
-void AAnimalsOfWarHUD::IncreaseNumGrenades(int NumGrenades)
+void AAnimalsOfWarHUD::SetNumGrenades(int NumGrenades)
 {
 	if (pNumGrenadesText.IsValid())
 	{

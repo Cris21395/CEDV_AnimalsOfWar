@@ -14,7 +14,7 @@
 
 
 // Sets default values
-AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenades(3), ForceToThrow(0.0), bPressedThrowGrenade(false),
+AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenades(0), ForceToThrow(0.0), bPressedThrowGrenade(false),
 	bPressedThrowSheep(false)
 {
 	// Set this actor to call Tick() every frame.
@@ -61,7 +61,7 @@ void AAnimalsOfWarCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("ThrowGrenade", IE_Pressed, this, &AAnimalsOfWarCharacter::ForceToThrowGrenade);
-	PlayerInputComponent->BindAction("ThrowSheep", IE_Released, this, &AAnimalsOfWarCharacter::ForceToThrowSheep);
+	PlayerInputComponent->BindAction("ThrowSheep", IE_Pressed, this, &AAnimalsOfWarCharacter::ForceToThrowSheep);
 	PlayerInputComponent->BindAction("ThrowGrenade", IE_Released, this, &AAnimalsOfWarCharacter::ThrowGrenade);
 	PlayerInputComponent->BindAction("ThrowSheep", IE_Released, this, &AAnimalsOfWarCharacter::ThrowSheep);
 
@@ -83,11 +83,11 @@ void AAnimalsOfWarCharacter::Tick(float DeltaSeconds)
 	// It's not possible to throw grenades and sheeps at the same time
 	if (bPressedThrowGrenade)
 	{
-		ForceToThrow += DeltaSeconds;
+		ForceToThrow += DeltaSeconds * 10000;
 	}
-	else if (bPressedThrowGrenade) 
+	else if (bPressedThrowSheep) 
 	{
-		ForceToThrow += DeltaSeconds;
+		ForceToThrow += DeltaSeconds * 10000;
 	}
 }
 
@@ -136,17 +136,18 @@ void AAnimalsOfWarCharacter::ThrowGrenade()
 {
 	if (NumGrenades > 0)
 	{
-		FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * 250.0f;
-		FRotator SpawnRotation = GetActorRotation();
-
-		AGrenade* grenade =(AGrenade*) GetWorld()->SpawnActor(AGrenade::StaticClass(), &SpawnLocation, &SpawnRotation);
-		//AThrowableGrenade* grenade = (AThrowableGrenade*)GetWorld()->SpawnActor(AThrowableGrenade::StaticClass(), &SpawnLocation, &SpawnRotation);
-		grenade->MakeThrowable();
+		FVector CameraForward = FollowCamera->GetForwardVector();
+		FVector SpawnLocation = GetActorLocation() + CameraForward * 250.0f;
+		FRotator SpawnRotation = FollowCamera->GetComponentRotation();
 		
-		NumGrenades -= 1;
-		bPressedThrowGrenade = false;
+		AGrenade* Grenade =(AGrenade*)GetWorld()->SpawnActor(AGrenade::StaticClass(), &SpawnLocation, &SpawnRotation);
 
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Granada VA!");
+		UStaticMeshComponent* Mesh = Grenade->GetGrenadeMesh();
+		Mesh->SetSimulatePhysics(true);
+		Mesh->SetPhysicsLinearVelocity(CameraForward * ForceToThrow);
+		
+		SetGrenadesCounter(-1);
+		bPressedThrowGrenade = false;
 	}
 }
 
@@ -154,15 +155,18 @@ void AAnimalsOfWarCharacter::ThrowSheep()
 {
 	if (NumSheeps > 0)
 	{
-		FVector SpawnLocation = GetActorLocation() + GetActorForwardVector() * ForceToThrow;
-		FRotator SpawnRotation = GetActorRotation();
+		FVector CameraForward = FollowCamera->GetForwardVector();
+		FVector SpawnLocation = GetActorLocation() + CameraForward * 250.0f;
+		FRotator SpawnRotation = FollowCamera->GetComponentRotation();
 
-		GetWorld()->SpawnActor(ASheep::StaticClass(), &SpawnLocation, &SpawnRotation);
+		ASheep* Sheep = (ASheep*)GetWorld()->SpawnActor(ASheep::StaticClass(), &SpawnLocation, &SpawnRotation);
 
-		NumSheeps -= 1;
+		UStaticMeshComponent* Mesh = Sheep->GetSheepMesh();
+		Mesh->SetSimulatePhysics(true);
+		Mesh->SetPhysicsLinearVelocity(CameraForward * ForceToThrow);
+
+		SetSheepsCounter(-1);
 		bPressedThrowSheep = false;
-
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Emerald, "Oveja VA!");
 	}
 }
 
@@ -186,24 +190,23 @@ void AAnimalsOfWarCharacter::Die()
 	Destroy();
 }
 
-void AAnimalsOfWarCharacter::IncreaseSheepCounter()
+void AAnimalsOfWarCharacter::SetSheepsCounter(int NumSheeps)
 {
 	// Increase Counter
-	NumSheeps += 1;
+	this->NumSheeps += NumSheeps;
 
 	// Notify HUD
-	AAnimalsOfWarHUD* hud = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	hud->IncreaseNumSheeps(NumSheeps);
-
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	HUD->SetNumSheeps(this->NumSheeps);
 }
 
-void AAnimalsOfWarCharacter::IncreaseGrenadeCounter()
+void AAnimalsOfWarCharacter::SetGrenadesCounter(int NumGrenades)
 {
-	// Increase Counter
-	NumGrenades += 1;
+	// Set Counter
+	this->NumGrenades += NumGrenades;
 
 	// Notify HUD
 	// TO DO: look for the active one (the one belonging to this character)
-	AAnimalsOfWarHUD* hud = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	hud->IncreaseNumGrenades(NumGrenades);
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	HUD->SetNumGrenades(this->NumGrenades);
 }

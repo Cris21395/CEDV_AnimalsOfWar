@@ -39,9 +39,9 @@ protected:
 public:
 	// Increases Sheeps text widget
 	UFUNCTION()
-		void IncreaseNumSheeps(int NumGrenades);
+		void SetNumSheeps(int NumGrenades);
 
 	// Increases Grenades text widget
 	UFUNCTION()
-		void IncreaseNumGrenades(int NumSheeps);
+		void SetNumGrenades(int NumSheeps);
 };

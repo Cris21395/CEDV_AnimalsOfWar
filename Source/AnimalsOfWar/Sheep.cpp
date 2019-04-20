@@ -33,6 +33,7 @@ ASheep::ASheep()
 	SheepMesh->SetupAttachment(RootComponent);
 	SheepMesh->SetStaticMesh(ConstructorStatics.Mesh.Get());
 	SheepMesh->SetCollisionProfileName(UCollisionProfile::BlockAll_ProfileName);
+	SheepMesh->SetNotifyRigidBodyCollision(true);
 
 	// Audio and explosion
 	ExplosionParticleSystem = ConstructorStatics.Explosion_Particle_System.Get();
@@ -78,10 +79,15 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 			// Otherwise, we increment the number of grenates
 			else
 			{
-				Character->IncreaseSheepCounter();
+				Character->SetSheepsCounter(1);
 			}
-
-			Destroy();
 		}
+		else
+		{
+			// Fire explosion if grenades collides with other thing is not character
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
+		}
+
+		Destroy();
 	}
 }

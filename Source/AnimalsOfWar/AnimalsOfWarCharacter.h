@@ -93,11 +93,11 @@ public:
 
 	/** Called when a sheep is picked up **/
 	UFUNCTION()
-		void IncreaseSheepCounter();
+		void SetSheepsCounter(int NumSheeps);
 
 	/** Called when a grenade is picked up **/
 	UFUNCTION()
-		void IncreaseGrenadeCounter();
+		void SetGrenadesCounter(int NumGrenades);
 
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }

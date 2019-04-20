@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Grenade.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine.h"
 #include "AnimalsOfWarCharacter.h"
 #include "UObject/ConstructorHelpers.h"
@@ -34,20 +33,11 @@ AGrenade::AGrenade()
 	GrenadeMesh->SetupAttachment(RootComponent);
 	GrenadeMesh->SetStaticMesh(ConstructorStatics.Mesh.Get());
 	GrenadeMesh->SetCollisionProfileName(UCollisionProfile::BlockAll_ProfileName);
+	GrenadeMesh->SetNotifyRigidBodyCollision(true);
 
 	// Audio and explosion
 	ExplosionParticleSystem = ConstructorStatics.Explosion_Particle_System.Get();
-	AudioExplosion = ConstructorStatics.Audio_Explosion.Get();
-
-	ProjectileComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-	//ProjectileComponent = NewObject<UProjectileMovementComponent>(this, UProjectileMovementComponent::StaticClass());
-	ProjectileComponent->SetAutoActivate(false);
-	ProjectileComponent->UpdatedComponent = GrenadeMesh.Get();
-	ProjectileComponent->InitialSpeed = 10.f;
-	ProjectileComponent->MaxSpeed = 30.f;
-	ProjectileComponent->bRotationFollowsVelocity = true;
-	ProjectileComponent->bShouldBounce = true;
-	
+	AudioExplosion = ConstructorStatics.Audio_Explosion.Get();	
 
 	// Register OnHit event
 	OnActorHit.AddDynamic(this, &AGrenade::OnHit);
@@ -65,19 +55,6 @@ void AGrenade::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-void AGrenade::MakeThrowable()
-{
-	// Projectile Movement Component Setup
-	//ProjectileComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileComp"));
-	//ProjectileComponent = NewObject<UProjectileMovementComponent>(this, UProjectileMovementComponent::StaticClass());
-	//ProjectileComponent->UpdatedComponent = GrenadeMesh.Get();
-	//ProjectileComponent->InitialSpeed = 10.f;
-	//ProjectileComponent->MaxSpeed = 30.f;
-	//ProjectileComponent->bRotationFollowsVelocity = true;
-	//ProjectileComponent->bShouldBounce = true;
-	ProjectileComponent->SetActive(true, true);
 }
 
 void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
@@ -104,7 +81,7 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 			// Otherwise, we increment the number of grenades
 			else
 			{
-				Character->IncreaseGrenadeCounter();
+				Character->SetGrenadesCounter(1);
 			}
 		}
 		else
