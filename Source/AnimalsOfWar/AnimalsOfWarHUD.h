@@ -29,6 +29,10 @@ public:
 	UPROPERTY()
 		TWeakObjectPtr<class UTextBlock> pNumSheepsText;
 
+	// Variable to hold specifically the counter TextBlock
+	UPROPERTY()
+		TWeakObjectPtr<class UTextBlock> pCounterText;
+
 	// Reference to HUD Widget class
 	class UClass* pHUDWidgetClass;
 
@@ -37,11 +41,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	// Increases Sheeps text widget
+	// Set Sheeps text widget
 	UFUNCTION()
 		void SetNumSheeps(int NumGrenades);
 
-	// Increases Grenades text widget
+	// Set Grenades text widget
 	UFUNCTION()
 		void SetNumGrenades(int NumSheeps);
+
+	// Update the counter text widget
+	UFUNCTION()
+		void UpdateCounter(int time);
 };

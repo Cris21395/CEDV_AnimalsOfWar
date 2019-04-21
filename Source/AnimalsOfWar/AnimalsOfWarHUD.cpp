@@ -34,6 +34,7 @@ void AAnimalsOfWarHUD::BeginPlay()
 			// Retrieve TextBlock widgets
 			pNumGrenadesText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumGrenades");
 			pNumSheepsText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumSheeps");
+			pCounterText = (UTextBlock*)pHUDWidget->GetWidgetFromName("TimeCounter");
 		}
 	}
 }
@@ -51,5 +52,13 @@ void AAnimalsOfWarHUD::SetNumGrenades(int NumGrenades)
 	if (pNumGrenadesText.IsValid())
 	{
 		pNumGrenadesText->SetText(FText::FromString(FString::FromInt(NumGrenades)));
+	}
+}
+
+void AAnimalsOfWarHUD::UpdateCounter(int time)
+{
+	if (pCounterText.IsValid()) 
+	{
+		pCounterText->SetText(FText::FromString(FString::FromInt(time)));
 	}
 }

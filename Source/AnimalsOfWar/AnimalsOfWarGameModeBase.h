@@ -19,6 +19,15 @@ public:
 
 	// Defines the number of players in the game
 	int const MaxPlayers = 2;
+	// Defines the max time of a turn in seconds
+	float const MaxTurnTime = 15.0f;
+
+	// Remaining time in a turn
+	float RemainingTurnTime;
+
+private:
+	// Aux variable for seconds in HUD
+	int HUDTime;
 
 protected:
 	// Begin Play Method
