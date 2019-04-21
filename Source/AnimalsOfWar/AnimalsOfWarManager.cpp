@@ -3,6 +3,7 @@
 #include "AnimalsOfWarManager.h"
 #include "AnimalsOfWarGameInstance.h"
 #include "AnimalsOfWarCharacter.h"
+#include "AnimalsOfWarHUD.h"
 #include "KitMedicine.h"
 #include "Sheep.h"
 #include "Grenade.h"
@@ -81,7 +82,10 @@ void AAnimalsOfWarManager::SpawnGrenadesRandomly(ATargetPoint * TargetPoint)
 void AAnimalsOfWarManager::NextCharacterPlayer1()
 {
 	// Calculate next index
-	Player1PossesedIndex = Player1PossesedIndex++ % Player1Characters.Num();
+	Player1PossesedIndex = ++Player1PossesedIndex % Player1Characters.Num();
 	// Posses next character
 	PlayerController1->Possess(Player1Characters[Player1PossesedIndex]);
+	// Load in HUD possessed character data
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(PlayerController1->GetHUD());
+	HUD->LoadPossesCharacterData((AAnimalsOfWarCharacter*)Player1Characters[Player1PossesedIndex]);
 }

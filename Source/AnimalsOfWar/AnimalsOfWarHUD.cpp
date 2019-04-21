@@ -1,8 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarHUD.h"
+#include "AnimalsOfWarCharacter.h"
+#include "AnimalsOfWarManager.h"
 #include "TextWidgetTypes.h"
 #include "TextBlock.h"
+#include "ProgressBar.h"
 #include "EngineUtils.h"
 #include "Engine.h"
 #include "Blueprint/UserWidget.h"
@@ -35,6 +38,30 @@ void AAnimalsOfWarHUD::BeginPlay()
 			pNumGrenadesText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumGrenades");
 			pNumSheepsText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumSheeps");
 			pCounterText = (UTextBlock*)pHUDWidget->GetWidgetFromName("TimeCounter");
+			
+			// Binding the progress bars to the health of the characters
+			AAnimalsOfWarManager* Manager = nullptr;
+			for (TActorIterator<AAnimalsOfWarManager> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+			{
+				// Conversion to smart pointer
+				Manager = *ActorItr;
+			}
+			for (int i = 0; i < Manager->Player1Characters.Num(); i++) 
+			{	
+				UProgressBar* allie_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Allie" + FString::FromInt(i))));
+				UProgressBar* opponent_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Opponent" + FString::FromInt(i))));
+				if (allie_health != nullptr)
+				{
+					allie_health->PercentDelegate.BindUFunction(Manager->Player1Characters[i], "GetHealthPercentage");
+					allie_health->SynchronizeProperties();
+				}
+				if (opponent_health != nullptr)
+				{
+					opponent_health->PercentDelegate.BindUFunction(Manager->Player2Characters[i], "GetHealthPercentage");
+					opponent_health->SynchronizeProperties();
+				}
+			}
+		
 		}
 	}
 }
@@ -61,4 +88,10 @@ void AAnimalsOfWarHUD::UpdateCounter(int time)
 	{
 		pCounterText->SetText(FText::FromString(FString::FromInt(time)));
 	}
+}
+
+void AAnimalsOfWarHUD::LoadPossesCharacterData(AAnimalsOfWarCharacter* character)
+{
+	SetNumSheeps(character->NumSheeps);
+	SetNumGrenades(character->NumGrenades);
 }

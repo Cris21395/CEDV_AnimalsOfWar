@@ -15,6 +15,4 @@ class ANIMALSOFWAR_API AAnimalsOfWarPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 	
-	
-	
 };

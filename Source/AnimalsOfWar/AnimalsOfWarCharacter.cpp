@@ -184,6 +184,11 @@ void AAnimalsOfWarCharacter::ThrowSheep()
 	}
 }
 
+float AAnimalsOfWarCharacter::GetHealthPercentage()
+{
+	return Health/100.0f;
+}
+
 void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, 
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
@@ -198,6 +203,7 @@ void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedCompon
 
 void AAnimalsOfWarCharacter::Die()
 {
+	Health = 0.0f;
 	// Start Die Animation
 
 	// Destroy Actor after delay

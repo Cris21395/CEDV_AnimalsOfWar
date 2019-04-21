@@ -6,9 +6,9 @@
 #include "GameFramework/HUD.h"
 #include "AnimalsOfWarHUD.generated.h"
 
-/**
- * 
- */
+
+class AAnimalsOfWarCharacter;
+
 UCLASS()
 class ANIMALSOFWAR_API AAnimalsOfWarHUD : public AHUD
 {
@@ -52,4 +52,8 @@ public:
 	// Update the counter text widget
 	UFUNCTION()
 		void UpdateCounter(int time);
+
+	// When a character is possed must call this function
+	UFUNCTION()
+		void LoadPossesCharacterData(AAnimalsOfWarCharacter* character);
 };

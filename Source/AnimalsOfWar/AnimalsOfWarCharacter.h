@@ -81,6 +81,10 @@ private:
 	UFUNCTION()
 		void ThrowSheep();
 
+	/** Called by the HUD to check Health **/
+	UFUNCTION()
+		float GetHealthPercentage();
+
 public:
 	/** Handles the event when actor overlaps with other object **/
 	UFUNCTION()
