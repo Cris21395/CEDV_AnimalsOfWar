@@ -37,11 +37,18 @@ public:
 	//Player Controller 2
 	TWeakObjectPtr <AAnimalsOfWarPlayerController>  PlayerController2;
 
+	// Called when the next character must be possesed for PC1
+	UFUNCTION()
+		void NextCharacterPlayer1();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
+	// Index of the possesed character for PC1
+	int Player1PossesedIndex = -1;
+
 	// Class to be associated in Editor to spawn character
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<AAnimalsOfWarCharacter> CharacterToSpawn;
@@ -89,4 +96,5 @@ private:
 
 	// Spawns digimons over the world
 	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
+
 };

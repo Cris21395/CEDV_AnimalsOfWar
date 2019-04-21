@@ -51,7 +51,7 @@ void AAnimalsOfWarManager::BeginPlay()
 	{
 		SpawnGrenadesRandomly(GrenadeTargetPoints[i]);
 	}
-	PlayerController1->Possess(Player1Characters[0]);
+	NextCharacterPlayer1();
 }
 
 AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoint * TargetPoint, UMaterial* Material)
@@ -76,4 +76,12 @@ void AAnimalsOfWarManager::SpawnKitsRandomly(ATargetPoint * TargetPoint)
 void AAnimalsOfWarManager::SpawnGrenadesRandomly(ATargetPoint * TargetPoint)
 {
 	GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
+}
+
+void AAnimalsOfWarManager::NextCharacterPlayer1()
+{
+	// Calculate next index
+	Player1PossesedIndex = Player1PossesedIndex++ % Player1Characters.Num();
+	// Posses next character
+	PlayerController1->Possess(Player1Characters[Player1PossesedIndex]);
 }

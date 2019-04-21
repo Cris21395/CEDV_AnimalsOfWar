@@ -2,8 +2,10 @@
 
 #include "AnimalsOfWarGameModeBase.h"
 #include "AnimalsOfWarPlayerController.h"
-#include "UObject/ConstructorHelpers.h"
+#include "AnimalsOfWarCharacter.h"
+#include "AnimalsOfWarManager.h"
 #include "AnimalsOfWarHUD.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Engine.h"
 
 
@@ -27,6 +29,16 @@ void AAnimalsOfWarGameModeBase::BeginPlay()
 	// Init the remaining time
 	RemainingTurnTime = MaxTurnTime;
 	HUDTime = floor(RemainingTurnTime);
+
+	// Get HUD reference
+	HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	// Get Manager reference
+
+	for (TActorIterator<AAnimalsOfWarManager> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		// Conversion to smart pointer
+		Manager = *ActorItr;
+	}
 }
 
 void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
@@ -37,15 +49,18 @@ void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 	if (HUDTime > floor(RemainingTurnTime)) 
 	{
 		HUDTime = floor(RemainingTurnTime);
-		AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 		HUD->UpdateCounter(HUDTime);
 	}
 
 	// Check turn timeout
 	if (RemainingTurnTime <= 0.0f) 
 	{
+		// Reset counter
 		RemainingTurnTime = MaxTurnTime;
 		HUDTime = floor(RemainingTurnTime);
+
+		// Change turn to diferrent character of the same PlayerController
+		Manager->NextCharacterPlayer1();
 
 	}
 
