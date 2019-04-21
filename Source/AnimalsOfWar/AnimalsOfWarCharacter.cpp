@@ -14,7 +14,7 @@
 
 
 // Sets default values
-AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumGrenades(0), ForceToThrow(0.0), bPressedThrowGrenade(false),
+AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), NumGrenades(0), ForceToThrow(0.0), bPressedThrowGrenade(false),
 	bPressedThrowSheep(false)
 {
 	// Set this actor to call Tick() every frame.
@@ -50,7 +50,6 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Life(100), NumSheeps(0), NumG
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 	// Register custom event
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAnimalsOfWarCharacter::BeginOverlap);
-
 }
 
 // Called to bind functionality to input
@@ -89,6 +88,21 @@ void AAnimalsOfWarCharacter::Tick(float DeltaSeconds)
 	{
 		ForceToThrow += DeltaSeconds * 10000;
 	}
+}
+
+float AAnimalsOfWarCharacter::TakeDamage(float DamageAmount, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	const float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	if (ActualDamage > 0.f)
+	{
+		Health -= ActualDamage;  
+		if (Health <= 0.f)
+		{
+			Die();
+		}
+	}
+
+	return ActualDamage;
 }
 
 void AAnimalsOfWarCharacter::MoveForward(float Value)

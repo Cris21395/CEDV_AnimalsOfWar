@@ -45,10 +45,10 @@ void AKitMedicine::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalIm
 		{
 			AAnimalsOfWarCharacter* Character = (AAnimalsOfWarCharacter*)OtherActor;
 
-			// Don't add extra life
-			if (Character->Life < 100) 
+			// Don't add extra Health
+			if (Character->Health < 100) 
 			{
-				Character->Life += Health;
+				Character->Health += Health;
 				Destroy();
 			}
 		}

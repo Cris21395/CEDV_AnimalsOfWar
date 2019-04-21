@@ -42,12 +42,16 @@ public:
 	// Number of grenates
 	int NumGrenades;
 
-	// Character's life
-	float Life;
+	// Character's health
+	float Health;
 
 protected:
 	/** Called every frame */
 	void Tick(float DeltaSeconds) override;
+
+	/** Called when character was applied a damage */
+	float TakeDamage(float DamageAmount, struct FDamageEvent const & DamageEvent,
+		AController * EventInstigator, AActor * DamageCauser) override;
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);

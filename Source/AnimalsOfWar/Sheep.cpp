@@ -5,6 +5,7 @@
 #include "AnimalsOfWarCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
+#include "Runtime/Engine/Classes/GameFramework/DamageType.h"
 #include "Engine/StaticMesh.h"
 
 // Sets default values
@@ -70,10 +71,10 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
 
 				// Apply damage to character
-				Character->Life -= Damage;
+				Character->Health -= Damage;
 
 				// Destory character if life is less or equal to 0
-				if (Character->Life <= 0)
+				if (Character->Health <= 0)
 					Character->Die();
 			}
 			// Otherwise, we increment the number of grenates
@@ -86,6 +87,10 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 		{
 			// Fire explosion if grenades collides with other thing is not character
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
+
+			// Apply radial damage if sheep does not hit to character
+			UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, Hit.Location, 700.0f, UDamageType::StaticClass(),
+				TArray<AActor*>(), this, (AController*)GetOwner(), true, ECollisionChannel::ECC_Pawn);
 		}
 
 		Destroy();
