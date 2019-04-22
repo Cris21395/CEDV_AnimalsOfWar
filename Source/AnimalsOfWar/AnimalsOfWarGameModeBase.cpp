@@ -7,6 +7,8 @@
 #include "AnimalsOfWarHUD.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine.h"
+#include "UMG.h"
+#include "WidgetBlueprintLibrary.h"
 
 
 AAnimalsOfWarGameModeBase::AAnimalsOfWarGameModeBase() 
@@ -43,6 +45,10 @@ void AAnimalsOfWarGameModeBase::BeginPlay()
 
 void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 {
+	//Obtain player controller
+	AAnimalsOfWarPlayerController* PlayerController1 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	//Obtain pawn of this character
+	AAnimalsOfWarCharacter * Character = (AAnimalsOfWarCharacter *)PlayerController1->GetPawn();
 	RemainingTurnTime -= DeltaTime;
 
 	// A second 
@@ -50,8 +56,12 @@ void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 	{
 		HUDTime = floor(RemainingTurnTime);
 		HUD->UpdateCounter(HUDTime);
+		if (HUDTime == 2) {
+			
+			//Disable Input for these character
+			Character->DisableInput(PlayerController1);
+		}
 	}
-
 	// Check turn timeout
 	if (RemainingTurnTime <= 0.0f) 
 	{
@@ -59,6 +69,9 @@ void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 		RemainingTurnTime = MaxTurnTime;
 		HUDTime = floor(RemainingTurnTime);
 
+		//Enable Input when you change the character
+		//MUST BE BEFORE THE METHOD BECAUSE AFTER IT WILL CHANGE THE PAWN
+		Character->EnableInput(PlayerController1);
 		// Change turn to diferrent character of the same PlayerController
 		Manager->NextCharacterPlayer1();
 
