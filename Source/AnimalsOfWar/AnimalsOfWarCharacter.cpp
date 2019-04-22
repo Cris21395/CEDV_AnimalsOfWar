@@ -46,6 +46,25 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), Nu
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	// Create a camera boom used when aiming
+	CameraBoomAiming = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoomAiming"));
+	CameraBoomAiming->SetupAttachment(RootComponent);
+	CameraBoomAiming->TargetArmLength = 50.0f; // The camera follows at this distance behind the character	
+	CameraBoomAiming->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	
+	// Create camera used when aiming
+	AimingCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("AimingCamera"));
+	AimingCamera->SetupAttachment(CameraBoomAiming, USpringArmComponent::SocketName);
+	AimingCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	AimingCamera->SetRelativeLocation(FVector(10.0f, 50.0f, -30.0f));
+	
+												   
+	// At the begining activate the follow camera
+	//FollowCamera->Activate(true);
+	//AimingCamera->Activate(false);
+
+
+
 	// Allow overlap events
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 	// Register custom event
