@@ -33,6 +33,10 @@ public:
 	UPROPERTY()
 		TWeakObjectPtr<class UTextBlock> pCounterText;
 
+	//Variable to hold specifically the image of the aim
+	UPROPERTY()
+		TWeakObjectPtr<class UImage> pAimImage;
+
 	// Reference to HUD Widget class
 	class UClass* pHUDWidgetClass;
 
@@ -56,4 +60,8 @@ public:
 	// When a character is possed must call this function
 	UFUNCTION()
 		void LoadPossesCharacterData(AAnimalsOfWarCharacter* character);
+
+	// Set Visible Aim Image
+	UFUNCTION()
+		void ShowAimImage(bool isVisible);
 };

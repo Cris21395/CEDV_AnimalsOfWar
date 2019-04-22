@@ -219,12 +219,16 @@ void AAnimalsOfWarCharacter::StartAiming()
 {
 	AimingCamera->SetActive(true);
 	FollowCamera->SetActive(false);
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	HUD->ShowAimImage(true);
 }
 
 void AAnimalsOfWarCharacter::StopAiming()
 {
 	FollowCamera->SetActive(true);
 	AimingCamera->SetActive(false);
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	HUD->ShowAimImage(false);
 }
 
 void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, 

@@ -6,6 +6,7 @@
 #include "TextWidgetTypes.h"
 #include "TextBlock.h"
 #include "ProgressBar.h"
+#include "Image.h"
 #include "EngineUtils.h"
 #include "Engine.h"
 #include "Blueprint/UserWidget.h"
@@ -38,6 +39,7 @@ void AAnimalsOfWarHUD::BeginPlay()
 			pNumGrenadesText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumGrenades");
 			pNumSheepsText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumSheeps");
 			pCounterText = (UTextBlock*)pHUDWidget->GetWidgetFromName("TimeCounter");
+			pAimImage = (UImage*)pHUDWidget->GetWidgetFromName("AimImage");
 
 			
 			// Binding the progress bars to the health of the characters
@@ -95,4 +97,15 @@ void AAnimalsOfWarHUD::LoadPossesCharacterData(AAnimalsOfWarCharacter* character
 {
 	SetNumSheeps(character->NumSheeps);
 	SetNumGrenades(character->NumGrenades);
+}
+
+void AAnimalsOfWarHUD::ShowAimImage(bool isVisible) 
+{
+	if (isVisible) {
+		pAimImage->SetVisibility(ESlateVisibility::Visible);
+	}
+	else {
+		pAimImage->SetVisibility(ESlateVisibility::Hidden);
+	}
+	
 }
