@@ -38,6 +38,7 @@ void AAnimalsOfWarHUD::BeginPlay()
 			pNumGrenadesText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumGrenades");
 			pNumSheepsText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumSheeps");
 			pCounterText = (UTextBlock*)pHUDWidget->GetWidgetFromName("TimeCounter");
+
 			
 			// Binding the progress bars to the health of the characters
 			AAnimalsOfWarManager* Manager = nullptr;
@@ -48,8 +49,8 @@ void AAnimalsOfWarHUD::BeginPlay()
 			}
 			for (int i = 0; i < Manager->Player1Characters.Num(); i++) 
 			{	
-				UProgressBar* allie_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Allie" + FString::FromInt(i))));
-				UProgressBar* opponent_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Opponent" + FString::FromInt(i))));
+				UProgressBar* allie_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Allie" + FString::FromInt(i+1))));
+				UProgressBar* opponent_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Opponent" + FString::FromInt(i+1))));
 				if (allie_health != nullptr)
 				{
 					allie_health->PercentDelegate.BindUFunction(Manager->Player1Characters[i], "GetHealthPercentage");
