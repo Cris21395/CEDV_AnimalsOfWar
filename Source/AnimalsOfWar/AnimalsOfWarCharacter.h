@@ -36,6 +36,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
+	/** Child actor for the Aiming Camera **/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UChildActorComponent* ChildCameraActor;
+
 	/** Camera boom of the aiming camera **/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoomAiming;
@@ -92,6 +96,15 @@ private:
 	/** Called by the HUD to check Health **/
 	UFUNCTION()
 		float GetHealthPercentage();
+
+	/** Called when aiming **/
+	UFUNCTION()
+		void StartAiming();
+
+	/** Called when stop aiming **/
+	UFUNCTION()
+		void StopAiming();
+
 
 public:
 	/** Handles the event when actor overlaps with other object **/
