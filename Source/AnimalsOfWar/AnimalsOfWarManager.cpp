@@ -19,6 +19,7 @@ void AAnimalsOfWarManager::BeginPlay()
 	Super::BeginPlay();
 
 	UAnimalsOfWarGameInstance * GameInstance = (UAnimalsOfWarGameInstance*)GetWorld()->GetGameInstance();
+
 	//Player Controllers
 	PlayerController1 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	PlayerController2 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 1);

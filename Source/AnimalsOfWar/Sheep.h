@@ -22,7 +22,7 @@ public:
 		TWeakObjectPtr<UStaticMeshComponent> SheepMesh;
 
 	// Damage caused when a sheep hits character
-	int const Damage = 50;
+	int const Damage = 35;
 
 protected:
 	// Called when the game starts or when spawned

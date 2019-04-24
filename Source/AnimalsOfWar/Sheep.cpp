@@ -89,7 +89,7 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
 
 			// Apply radial damage if sheep does not hit to character
-			UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, Hit.Location, 700.0f, UDamageType::StaticClass(),
+			UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, Hit.Location, 500.0f, UDamageType::StaticClass(),
 				TArray<AActor*>(), this, (AController*)GetOwner(), true, ECollisionChannel::ECC_Pawn);
 		}
 

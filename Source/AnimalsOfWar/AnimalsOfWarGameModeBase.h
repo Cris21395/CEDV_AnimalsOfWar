@@ -19,6 +19,7 @@ public:
 
 	// Defines the number of players in the game
 	int const MaxPlayers = 2;
+
 	// Defines the max time of a turn in seconds
 	float const MaxTurnTime = 15.0f;
 

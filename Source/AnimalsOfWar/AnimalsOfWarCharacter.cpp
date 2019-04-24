@@ -62,13 +62,6 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), Nu
 	AimingCamera->SetupAttachment(CameraBoomAiming, USpringArmComponent::SocketName);
 	AimingCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	AimingCamera->SetRelativeLocation(FVector(10.0f, 50.0f, -30.0f));
-	
-												   
-	// At the begining activate the follow camera
-	FollowCamera->SetActive(true);
-	AimingCamera->SetActive(false);
-
-
 
 	// Allow overlap events
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
@@ -197,9 +190,9 @@ void AAnimalsOfWarCharacter::ThrowSheep()
 	{
 		FVector CameraForward = FollowCamera->GetForwardVector();
 		FVector SpawnLocation = GetActorLocation() + CameraForward * 250.0f;
-		FRotator SpawnRotation = FollowCamera->GetComponentRotation();
+		FRotator SpawnRotation = FRotator::ZeroRotator;
 
-		ASheep* Sheep = (ASheep*)GetWorld()->SpawnActor(ASheep::StaticClass(), &SpawnLocation, &SpawnRotation);
+		ASheep* Sheep = (ASheep*)GetWorld()->SpawnActor(ASheep::StaticClass(), &SpawnLocation);
 
 		UStaticMeshComponent* Mesh = Sheep->GetSheepMesh();
 		Mesh->SetSimulatePhysics(true);
@@ -225,8 +218,8 @@ void AAnimalsOfWarCharacter::StartAiming()
 
 void AAnimalsOfWarCharacter::StopAiming()
 {
-	FollowCamera->SetActive(true);
 	AimingCamera->SetActive(false);
+	FollowCamera->SetActive(true);
 	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
 	HUD->ShowAimImage(false);
 }
@@ -236,6 +229,7 @@ void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedCompon
 {
 	if (OtherActor) 
 	{
+		// Kill character when he is out of the boundary of the map
 		if (OtherComp->IsA(UBoxComponent::StaticClass()))
 		{
 			Die();
@@ -245,8 +239,7 @@ void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedCompon
 
 void AAnimalsOfWarCharacter::Die()
 {
-	Health = 0.0f;
-	// Start Die Animation
+	// TODO: Start Die Animation
 
 	// Destroy Actor after delay
 	Destroy();

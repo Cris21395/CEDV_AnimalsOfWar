@@ -6,9 +6,6 @@
 #include "GameFramework/Character.h"
 #include "AnimalsOfWarCharacter.generated.h"
 
-class AGrenade;
-class AAnimalsOfWarHUD;
-
 /**
  * Character class based on ThirdPersonCharacter template
  */
@@ -104,7 +101,6 @@ private:
 	/** Called when stop aiming **/
 	UFUNCTION()
 		void StopAiming();
-
 
 public:
 	/** Handles the event when actor overlaps with other object **/

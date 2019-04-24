@@ -91,7 +91,7 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
 
 			// Apply radial damage if grenade does not hit to character
-			UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, Hit.Location, 700.0f, UDamageType::StaticClass(),
+			UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, Hit.Location, 600.0f, UDamageType::StaticClass(),
 				TArray<AActor*>(), this, (AController*)GetOwner(), true, ECollisionChannel::ECC_Pawn);
 		}
 
