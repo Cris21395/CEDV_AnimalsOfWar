@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarCharacter.h"
-#include "Grenade.h"
-#include "ThrowableGrenade.h"
-#include "Sheep.h"
+#include "AnimalsOfWarGameModeBase.h"
+#include "AnimalsOfWarPlayerController.h"
 #include "AnimalsOfWarHUD.h"
-#include "Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
+#include "Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-
+#include "Grenade.h"
+#include "Sheep.h"
 
 // Sets default values
 AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), NumGrenades(0), ForceToThrow(0.0), bPressedThrowGrenade(false),
@@ -212,7 +212,7 @@ void AAnimalsOfWarCharacter::StartAiming()
 {
 	AimingCamera->SetActive(true);
 	FollowCamera->SetActive(false);
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->ShowAimImage(true);
 }
 
@@ -220,7 +220,7 @@ void AAnimalsOfWarCharacter::StopAiming()
 {
 	AimingCamera->SetActive(false);
 	FollowCamera->SetActive(true);
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->ShowAimImage(false);
 }
 
@@ -241,6 +241,14 @@ void AAnimalsOfWarCharacter::Die()
 {
 	// TODO: Start Die Animation
 
+	Health = 0;
+
+	DeadCharacterDelegate.ExecuteIfBound(this);
+
+	// Reset time
+	AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>(GetWorld()->GetAuthGameMode());
+	GameModeBase->RemainingTurnTime = 0.0f;
+
 	// Destroy Actor after delay
 	Destroy();
 }
@@ -251,7 +259,7 @@ void AAnimalsOfWarCharacter::SetSheepsCounter(int NumSheeps)
 	this->NumSheeps += NumSheeps;
 
 	// Notify HUD
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->SetNumSheeps(this->NumSheeps);
 }
 
@@ -261,7 +269,6 @@ void AAnimalsOfWarCharacter::SetGrenadesCounter(int NumGrenades)
 	this->NumGrenades += NumGrenades;
 
 	// Notify HUD
-	// TO DO: look for the active one (the one belonging to this character)
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->SetNumGrenades(this->NumGrenades);
 }

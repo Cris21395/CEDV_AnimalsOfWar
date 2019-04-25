@@ -25,30 +25,21 @@ void AAnimalsOfWarGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UGameplayStatics::CreatePlayer(GetWorld(), 0, true);
-	UGameplayStatics::CreatePlayer(GetWorld(), 1, true);
-
 	// Init the remaining time
 	RemainingTurnTime = MaxTurnTime;
 	HUDTime = floor(RemainingTurnTime);
 
 	// Get HUD reference
 	HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
-	// Get Manager reference
-
-	for (TActorIterator<AAnimalsOfWarManager> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		// Conversion to smart pointer
-		Manager = *ActorItr;
-	}
 }
 
 void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 {
-	//Obtain player controller
-	AAnimalsOfWarPlayerController* PlayerController1 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	// Obtain player controller
+	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
+
 	//Obtain pawn of this character
-	AAnimalsOfWarCharacter * Character = (AAnimalsOfWarCharacter *)PlayerController1->GetPawn();
+	AAnimalsOfWarCharacter * Character = Cast<AAnimalsOfWarCharacter>(PlayerController->GetPawn());
 	RemainingTurnTime -= DeltaTime;
 
 	// A second 
@@ -59,7 +50,7 @@ void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 		if (HUDTime == 2) {
 			
 			//Disable Input for these character
-			Character->DisableInput(PlayerController1);
+			if (Character) Character->DisableInput(PlayerController);
 		}
 	}
 	// Check turn timeout
@@ -71,10 +62,7 @@ void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 
 		//Enable Input when you change the character
 		//MUST BE BEFORE THE METHOD BECAUSE AFTER IT WILL CHANGE THE PAWN
-		Character->EnableInput(PlayerController1);
-		// Change turn to diferrent character of the same PlayerController
-		Manager->NextCharacterPlayer1();
-
+		if (Character) Character->EnableInput(PlayerController);
+		PlayerController->NextTurn();
 	}
-
 }

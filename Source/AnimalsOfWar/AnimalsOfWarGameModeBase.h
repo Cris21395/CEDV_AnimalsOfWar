@@ -27,11 +27,14 @@ public:
 	float RemainingTurnTime;
 
 private:
-	// Variable to hold a reference to the HUD
+	// Pointer to HUD class
 	TWeakObjectPtr<class AAnimalsOfWarHUD> HUD;
 
-	// Varibale to hold a reference to the AnimalsOfWar manager
+	// Pointer to AnimalsOfWarManager class
 	TWeakObjectPtr<class AAnimalsOfWarManager> Manager;
+
+	// Pointer to PlayerController class
+	TWeakObjectPtr<class AAnimalsOfWarPlayerController> PlayerController;
 
 	// Aux variable for seconds in HUD
 	int HUDTime;

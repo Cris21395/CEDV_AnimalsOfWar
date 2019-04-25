@@ -9,11 +9,6 @@
 #include "GameFramework/Actor.h"
 #include "AnimalsOfWarManager.generated.h"
 
-class AAnimalsOfWarCharacter;
-class ASheep;
-class AKitMedicine;
-class AGrenade;
-
 UCLASS()
 class ANIMALSOFWAR_API AAnimalsOfWarManager : public AActor
 {
@@ -30,40 +25,30 @@ public:
 	// Array used to store the Player1's characters
 	UPROPERTY()
 		TArray<APawn*> Player2Characters;
-	
-	//Player Controller 1
-	TWeakObjectPtr <AAnimalsOfWarPlayerController>  PlayerController1;
-
-	//Player Controller 2
-	TWeakObjectPtr <AAnimalsOfWarPlayerController>  PlayerController2;
-
-	// Called when the next character must be possesed for PC1
-	UFUNCTION()
-		void NextCharacterPlayer1();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-private:
-	// Index of the possesed character for PC1
-	int Player1PossesedIndex = -1;
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
+private:
 	// Class to be associated in Editor to spawn character
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<AAnimalsOfWarCharacter> CharacterToSpawn;
+		TSubclassOf<class AAnimalsOfWarCharacter> CharacterToSpawn;
 
 	// Class to be associated in Editor to spawn sheep
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<ASheep> SheepToSpawn;
+		TSubclassOf<class ASheep> SheepToSpawn;
 
 	// Class to be associated in Editor to spawn kit medicine
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<AKitMedicine> KitToSpawn;
+		TSubclassOf<class AKitMedicine> KitToSpawn;
 
 	// Class to be associated in Editor to spawn grenade
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<AGrenade> GrenadeToSpawn;
+		TSubclassOf<class AGrenade> GrenadeToSpawn;
 
 	// Spawn points for player 1
 	UPROPERTY(EditAnywhere)
@@ -97,4 +82,6 @@ private:
 	// Spawns digimons over the world
 	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
 
+	// Remove a character from list
+	void DereferenceCharacter(AAnimalsOfWarCharacter* Character);
 };
