@@ -43,6 +43,5 @@ void ARecordsManager::SaveNewRecord(FString TeamName, int HitHans)
 
 	// Save the game
 	UGameplayStatics::SaveGameToSlot(AnimalsOfWarSaveGamePtr.Get(), AnimalsOfWarSaveGamePtr->SaveSlotName, AnimalsOfWarSaveGamePtr->UserIndex);
-
 }
 

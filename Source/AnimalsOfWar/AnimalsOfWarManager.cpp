@@ -11,17 +11,18 @@
 #include "EngineUtils.h"
 
 // Sets default values
-AAnimalsOfWarManager::AAnimalsOfWarManager() {}
+AAnimalsOfWarManager::AAnimalsOfWarManager() 
+{
+	PrimaryActorTick.bCanEverTick = true;
+}
 
 // Called when the game starts or when spawned
 void AAnimalsOfWarManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UAnimalsOfWarGameInstance * GameInstance = (UAnimalsOfWarGameInstance*)GetWorld()->GetGameInstance();
-	//Player Controllers
-	PlayerController1 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	PlayerController2 = (AAnimalsOfWarPlayerController*)UGameplayStatics::GetPlayerController(GetWorld(), 1);
+	// Get GameInstance reference
+	UAnimalsOfWarGameInstance * GameInstance = Cast<UAnimalsOfWarGameInstance>(GetWorld()->GetGameInstance());
 
 	// It's the same which array to use. Both have the same number of elements
 	int NumbersPawnsToBeSpawned = Player1TargetPoints.Num();
@@ -52,16 +53,34 @@ void AAnimalsOfWarManager::BeginPlay()
 	{
 		SpawnGrenadesRandomly(GrenadeTargetPoints[i]);
 	}
-	NextCharacterPlayer1();
+}
+
+// Called every frame
+void AAnimalsOfWarManager::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 }
 
 AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoint * TargetPoint, UMaterial* Material)
 {
 	AAnimalsOfWarCharacter * Character = GetWorld()->SpawnActor<AAnimalsOfWarCharacter>
 		(CharacterToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
+
+	// Register DereferenceCharacter method to be called when character has died
+	Character->DeadCharacterDelegate.BindUObject(this, &AAnimalsOfWarManager::DereferenceCharacter);
+
 	Character->GetMesh()->SetMaterial(2, Material);
 
 	return Character;
+}
+
+void AAnimalsOfWarManager::DereferenceCharacter(AAnimalsOfWarCharacter * Character)
+{
+	int RemovedItem = Player1Characters.Remove(Character);
+
+	if (RemovedItem != 0) return;
+
+	Player2Characters.Remove(Character);
 }
 
 void AAnimalsOfWarManager::SpawnSheepsRandomly(ATargetPoint * TargetPoint)
@@ -77,15 +96,4 @@ void AAnimalsOfWarManager::SpawnKitsRandomly(ATargetPoint * TargetPoint)
 void AAnimalsOfWarManager::SpawnGrenadesRandomly(ATargetPoint * TargetPoint)
 {
 	GetWorld()->SpawnActor<AGrenade>(GrenadeToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
-}
-
-void AAnimalsOfWarManager::NextCharacterPlayer1()
-{
-	// Calculate next index
-	Player1PossesedIndex = ++Player1PossesedIndex % Player1Characters.Num();
-	// Posses next character
-	PlayerController1->Possess(Player1Characters[Player1PossesedIndex]);
-	// Load in HUD possessed character data
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(PlayerController1->GetHUD());
-	HUD->LoadPossesCharacterData((AAnimalsOfWarCharacter*)Player1Characters[Player1PossesedIndex]);
 }

@@ -6,8 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AnimalsOfWarCharacter.generated.h"
 
-class AGrenade;
-class AAnimalsOfWarHUD;
+DECLARE_DELEGATE_OneParam(FCharacterDelegate, class AAnimalsOfWarCharacter*);
 
 /**
  * Character class based on ThirdPersonCharacter template
@@ -47,6 +46,9 @@ public:
 	/** Camera when aiming **/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* AimingCamera;
+
+	// Called when a character is about to die
+	FCharacterDelegate DeadCharacterDelegate;
 
 	// Number of sheeps
 	int NumSheeps;
@@ -104,7 +106,6 @@ private:
 	/** Called when stop aiming **/
 	UFUNCTION()
 		void StopAiming();
-
 
 public:
 	/** Handles the event when actor overlaps with other object **/

@@ -19,6 +19,7 @@ public:
 
 	// Defines the number of players in the game
 	int const MaxPlayers = 2;
+
 	// Defines the max time of a turn in seconds
 	float const MaxTurnTime = 15.0f;
 
@@ -26,11 +27,14 @@ public:
 	float RemainingTurnTime;
 
 private:
-	// Variable to hold a reference to the HUD
+	// Pointer to HUD class
 	TWeakObjectPtr<class AAnimalsOfWarHUD> HUD;
 
-	// Varibale to hold a reference to the AnimalsOfWar manager
+	// Pointer to AnimalsOfWarManager class
 	TWeakObjectPtr<class AAnimalsOfWarManager> Manager;
+
+	// Pointer to PlayerController class
+	TWeakObjectPtr<class AAnimalsOfWarPlayerController> PlayerController;
 
 	// Aux variable for seconds in HUD
 	int HUDTime;

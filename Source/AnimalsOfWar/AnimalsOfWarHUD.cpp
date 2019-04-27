@@ -101,11 +101,6 @@ void AAnimalsOfWarHUD::LoadPossesCharacterData(AAnimalsOfWarCharacter* character
 
 void AAnimalsOfWarHUD::ShowAimImage(bool isVisible) 
 {
-	if (isVisible) {
-		pAimImage->SetVisibility(ESlateVisibility::Visible);
-	}
-	else {
-		pAimImage->SetVisibility(ESlateVisibility::Hidden);
-	}
-	
+	if (isVisible) pAimImage->SetVisibility(ESlateVisibility::Visible);
+	else pAimImage->SetVisibility(ESlateVisibility::Hidden);	
 }

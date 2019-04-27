@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarCharacter.h"
-#include "Grenade.h"
-#include "ThrowableGrenade.h"
-#include "Sheep.h"
+#include "AnimalsOfWarGameModeBase.h"
+#include "AnimalsOfWarPlayerController.h"
 #include "AnimalsOfWarHUD.h"
-#include "Engine.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
+#include "Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-
+#include "Grenade.h"
+#include "Sheep.h"
 
 // Sets default values
 AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), NumGrenades(0), ForceToThrow(0.0), bPressedThrowGrenade(false),
@@ -62,13 +62,6 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), Nu
 	AimingCamera->SetupAttachment(CameraBoomAiming, USpringArmComponent::SocketName);
 	AimingCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	AimingCamera->SetRelativeLocation(FVector(10.0f, 50.0f, -30.0f));
-	
-												   
-	// At the begining activate the follow camera
-	FollowCamera->SetActive(true);
-	AimingCamera->SetActive(false);
-
-
 
 	// Allow overlap events
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
@@ -197,9 +190,9 @@ void AAnimalsOfWarCharacter::ThrowSheep()
 	{
 		FVector CameraForward = FollowCamera->GetForwardVector();
 		FVector SpawnLocation = GetActorLocation() + CameraForward * 250.0f;
-		FRotator SpawnRotation = FollowCamera->GetComponentRotation();
+		FRotator SpawnRotation = FRotator::ZeroRotator;
 
-		ASheep* Sheep = (ASheep*)GetWorld()->SpawnActor(ASheep::StaticClass(), &SpawnLocation, &SpawnRotation);
+		ASheep* Sheep = (ASheep*)GetWorld()->SpawnActor(ASheep::StaticClass(), &SpawnLocation);
 
 		UStaticMeshComponent* Mesh = Sheep->GetSheepMesh();
 		Mesh->SetSimulatePhysics(true);
@@ -219,15 +212,15 @@ void AAnimalsOfWarCharacter::StartAiming()
 {
 	AimingCamera->SetActive(true);
 	FollowCamera->SetActive(false);
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->ShowAimImage(true);
 }
 
 void AAnimalsOfWarCharacter::StopAiming()
 {
-	FollowCamera->SetActive(true);
 	AimingCamera->SetActive(false);
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	FollowCamera->SetActive(true);
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->ShowAimImage(false);
 }
 
@@ -236,6 +229,7 @@ void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedCompon
 {
 	if (OtherActor) 
 	{
+		// Kill character when he is out of the boundary of the map
 		if (OtherComp->IsA(UBoxComponent::StaticClass()))
 		{
 			Die();
@@ -245,8 +239,15 @@ void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedCompon
 
 void AAnimalsOfWarCharacter::Die()
 {
-	Health = 0.0f;
-	// Start Die Animation
+	// TODO: Start Die Animation
+
+	Health = 0;
+
+	DeadCharacterDelegate.ExecuteIfBound(this);
+
+	// Reset time
+	AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>(GetWorld()->GetAuthGameMode());
+	GameModeBase->RemainingTurnTime = 0.0f;
 
 	// Destroy Actor after delay
 	Destroy();
@@ -258,7 +259,7 @@ void AAnimalsOfWarCharacter::SetSheepsCounter(int NumSheeps)
 	this->NumSheeps += NumSheeps;
 
 	// Notify HUD
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->SetNumSheeps(this->NumSheeps);
 }
 
@@ -268,7 +269,6 @@ void AAnimalsOfWarCharacter::SetGrenadesCounter(int NumGrenades)
 	this->NumGrenades += NumGrenades;
 
 	// Notify HUD
-	// TO DO: look for the active one (the one belonging to this character)
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	HUD->SetNumGrenades(this->NumGrenades);
 }
