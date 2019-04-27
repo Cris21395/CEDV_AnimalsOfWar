@@ -35,18 +35,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
-	/** Child actor for the Aiming Camera **/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UChildActorComponent* ChildCameraActor;
-
-	/** Camera boom of the aiming camera **/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoomAiming;
-
-	/** Camera when aiming **/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* AimingCamera;
-
 	// Called when a character is about to die
 	FCharacterDelegate DeadCharacterDelegate;
 
@@ -100,12 +88,12 @@ private:
 		float GetHealthPercentage();
 
 	/** Called when aiming **/
-	UFUNCTION()
-		void StartAiming();
+	UFUNCTION(BlueprintCallable, Category = "Aiming")
+		void StartAiming(AActor* TargetActor);
 
 	/** Called when stop aiming **/
-	UFUNCTION()
-		void StopAiming();
+	UFUNCTION(BlueprintCallable, Category = "Aiming")
+		void StopAiming(AActor* TargetActor);
 
 public:
 	/** Handles the event when actor overlaps with other object **/

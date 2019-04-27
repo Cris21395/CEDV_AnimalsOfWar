@@ -46,23 +46,6 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), Nu
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
-	// Create a camera boom used when aiming
-	CameraBoomAiming = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoomAiming"));
-	CameraBoomAiming->SetupAttachment(RootComponent);
-	CameraBoomAiming->TargetArmLength = 50.0f; // The camera follows at this distance behind the character	
-	CameraBoomAiming->bUsePawnControlRotation = true; // Roatate the arm based on the controller
-	
-	// Create child actor and camera used when aiming (TO-DO)
-	ChildCameraActor = CreateDefaultSubobject<UChildActorComponent>(TEXT("CameraChildActor"));
-	//ChildCameraActor->SetupAttachment(CameraBoomAiming);
-	//ChildCameraActor->SetChildActorClass(ACameraActor::StaticClass());
-	//ChildCameraActor->CreateChildActor();
-
-	AimingCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("AimingCamera"));
-	AimingCamera->SetupAttachment(CameraBoomAiming, USpringArmComponent::SocketName);
-	AimingCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	AimingCamera->SetRelativeLocation(FVector(10.0f, 50.0f, -30.0f));
-
 	// Allow overlap events
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 	// Register custom event
@@ -80,9 +63,7 @@ void AAnimalsOfWarCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction("ThrowSheep", IE_Pressed, this, &AAnimalsOfWarCharacter::ForceToThrowSheep);
 	PlayerInputComponent->BindAction("ThrowGrenade", IE_Released, this, &AAnimalsOfWarCharacter::ThrowGrenade);
 	PlayerInputComponent->BindAction("ThrowSheep", IE_Released, this, &AAnimalsOfWarCharacter::ThrowSheep);
-	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AAnimalsOfWarCharacter::StartAiming);
-	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AAnimalsOfWarCharacter::StopAiming);
-
+	
 	PlayerInputComponent->BindAxis("MoveForward", this, &AAnimalsOfWarCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AAnimalsOfWarCharacter::MoveRight);
 
@@ -208,19 +189,19 @@ float AAnimalsOfWarCharacter::GetHealthPercentage()
 	return Health/100.0f;
 }
 
-void AAnimalsOfWarCharacter::StartAiming()
+void AAnimalsOfWarCharacter::StartAiming(AActor* TargetActor)
 {
-	AimingCamera->SetActive(true);
-	FollowCamera->SetActive(false);
-	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(PlayerController->GetHUD());
+	PlayerController->SetViewTargetWithBlend(TargetActor, 0.3f);
 	HUD->ShowAimImage(true);
 }
 
-void AAnimalsOfWarCharacter::StopAiming()
+void AAnimalsOfWarCharacter::StopAiming(AActor* TargetActor)
 {
-	AimingCamera->SetActive(false);
-	FollowCamera->SetActive(true);
+	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
 	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	PlayerController->SetViewTargetWithBlend(TargetActor, 0.3f);
 	HUD->ShowAimImage(false);
 }
 
