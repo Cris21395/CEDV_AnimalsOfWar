@@ -30,39 +30,59 @@ void AAnimalsOfWarGameModeBase::BeginPlay()
 	HUDTime = floor(RemainingTurnTime);
 
 	// Get HUD reference
-	HUD = Cast<AAnimalsOfWarHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	// Get PlayerController reference
+	PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
 }
 
 void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 {
-	// Obtain player controller
-	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
-
-	//Obtain pawn of this character
-	AAnimalsOfWarCharacter * Character = Cast<AAnimalsOfWarCharacter>(PlayerController->GetPawn());
+	
 	RemainingTurnTime -= DeltaTime;
 
 	// A second 
-	if (HUDTime > floor(RemainingTurnTime)) 
+	if (HUDTime > floor(RemainingTurnTime) && HUDTime>0) 
 	{
 		HUDTime = floor(RemainingTurnTime);
 		HUD->UpdateCounter(HUDTime);
-		if (HUDTime == 2) {
-			
-			//Disable Input for these character
-			if (Character) Character->DisableInput(PlayerController);
+		if (HUDTime <= 0) {
+			EndTurn();
 		}
 	}
 	// Check turn timeout
-	if (RemainingTurnTime <= 0.0f) 
+	if (RemainingTurnTime <= -FeedbackTime) // Negative as reminingTurnTime keep decreasing
 	{
-		// Reset counter
-		RemainingTurnTime = MaxTurnTime;
-		HUDTime = floor(RemainingTurnTime);
-
-		//Enable Input when you change the character
-		//MUST BE BEFORE THE METHOD BECAUSE AFTER IT WILL CHANGE THE PAWN
-		if (Character) Character->EnableInput(PlayerController);
-		PlayerController->NextTurn();
+		ChangeTurn();
 	}
+}
+
+void AAnimalsOfWarGameModeBase::EndTurn()
+{
+	//Obtain pawn of this character
+	AAnimalsOfWarCharacter * Character = Cast<AAnimalsOfWarCharacter>(PlayerController.Get()->GetPawn());
+	//Disable Input for these character
+	if (Character) 
+		Character->DisableInput(PlayerController.Get());
+
+	// SHOW FEEDBACK TEXT AND PLAY ANIMATION AS IN THE BATTLESHIOGAME
+	//HUD->ShowEndTurnFeedback();
+	
+}
+
+void AAnimalsOfWarGameModeBase::ChangeTurn()
+{
+	AAnimalsOfWarCharacter * Character = Cast<AAnimalsOfWarCharacter>(PlayerController.Get()->GetPawn());
+
+	// Reset counter
+	RemainingTurnTime = MaxTurnTime;
+	HUDTime = floor(RemainingTurnTime);
+
+	//Hide aiming cross
+	HUD->ShowAimImage(false);
+
+	//Enable Input when you change the character
+	//MUST BE BEFORE THE METHOD BECAUSE AFTER IT WILL CHANGE THE PAWN
+	if (Character) 
+		Character->EnableInput(PlayerController.Get());
+	PlayerController->NextTurn();
 }

@@ -21,7 +21,11 @@ public:
 	int const MaxPlayers = 2;
 
 	// Defines the max time of a turn in seconds
-	float const MaxTurnTime = 15.0f;
+	float const MaxTurnTime = 30.0f;
+
+	// After a turn this is the time that the player is given feedback
+	// before the change of the possessed pawn
+	float const FeedbackTime = 2.0f;
 
 	// Remaining time in a turn
 	float RemainingTurnTime;
@@ -38,6 +42,16 @@ private:
 
 	// Aux variable for seconds in HUD
 	int HUDTime;
+
+	// Called when the turn finishes and the character is not
+	// able to be controlled and feedback is given to the player
+	UFUNCTION()
+		void EndTurn();
+
+	// Called after feedback is been given and the turn is changed
+	// to the other team
+	UFUNCTION()
+		void ChangeTurn();
 
 protected:
 	// Begin Play Method
