@@ -56,6 +56,11 @@ void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 	}
 }
 
+void AAnimalsOfWarGameModeBase::ThereIsAWinner()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Maps/Records"), TRAVEL_Absolute);
+}
+
 void AAnimalsOfWarGameModeBase::EndTurn()
 {
 	//Obtain pawn of this character

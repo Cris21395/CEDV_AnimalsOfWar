@@ -46,6 +46,14 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), Nu
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
+	// Getting Die animation
+	auto AnimAsset = ConstructorHelpers::FObjectFinder<UAnimSequence>(TEXT(
+		"AnimSequence'/Game/Animations/Character_Veemon/Falling_Back_Death.Falling_Back_Death'"));
+	if (AnimAsset.Succeeded())
+	{
+		DieAnimation = AnimAsset.Object;
+	}
+
 	// Allow overlap events
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 	// Register custom event
@@ -220,18 +228,24 @@ void AAnimalsOfWarCharacter::BeginOverlap(UPrimitiveComponent * OverlappedCompon
 
 void AAnimalsOfWarCharacter::Die()
 {
-	// TODO: Start Die Animation
+	Health = 0; // Set to 0 so that Health cannot be negative
 
-	Health = 0;
-
+	// Run delegate in order to remove this reference in Manager Character's list
 	DeadCharacterDelegate.ExecuteIfBound(this);
 
 	// Reset time
 	AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>(GetWorld()->GetAuthGameMode());
 	GameModeBase->RemainingTurnTime = 0.0f;
 
-	// Destroy Actor after delay
-	Destroy();
+	// Play die animation
+	GetMesh()->PlayAnimation(DieAnimation.Get(), false);
+	float animLen = DieAnimation.Get()->GetPlayLength();
+
+	// Destroy actor after animation has finished
+	FTimerDelegate TimerDelegate;
+	FTimerHandle Handle;
+	TimerDelegate.BindLambda([&]() { Destroy(); });
+	GetWorld()->GetTimerManager().SetTimer(Handle, TimerDelegate, animLen, false);
 }
 
 void AAnimalsOfWarCharacter::SetSheepsCounter(int NumSheeps)

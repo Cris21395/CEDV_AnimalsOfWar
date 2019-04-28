@@ -57,9 +57,10 @@ protected:
 	// Begin Play Method
 	virtual void BeginPlay() override;
 
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// TODO: define a method to know which player has won	
+public:
+	// Called when there is a winner
+	void ThereIsAWinner();
 };

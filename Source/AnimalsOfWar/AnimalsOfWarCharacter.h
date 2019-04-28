@@ -67,6 +67,10 @@ private:
 	bool bPressedThrowSheep;
 	float ForceToThrow;
 
+	/** Animation when character dies */
+	UPROPERTY()
+		TWeakObjectPtr<UAnimSequence> DieAnimation;
+
 	/** Called for getting force to throw a grenade */
 	UFUNCTION()
 		void ForceToThrowGrenade();

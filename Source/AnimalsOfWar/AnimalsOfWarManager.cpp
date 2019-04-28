@@ -1,14 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AnimalsOfWarManager.h"
-#include "AnimalsOfWarGameInstance.h"
 #include "AnimalsOfWarCharacter.h"
+#include "AnimalsOfWarGameModeBase.h"
+#include "AnimalsOfWarGameInstance.h"
 #include "AnimalsOfWarHUD.h"
-#include "KitMedicine.h"
-#include "Sheep.h"
-#include "Grenade.h"
 #include "EngineMinimal.h"
 #include "EngineUtils.h"
+#include "Grenade.h"
+#include "KitMedicine.h"
+#include "Sheep.h"
 
 // Sets default values
 AAnimalsOfWarManager::AAnimalsOfWarManager() 
@@ -66,10 +67,10 @@ AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoin
 	AAnimalsOfWarCharacter * Character = GetWorld()->SpawnActor<AAnimalsOfWarCharacter>
 		(CharacterToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
 
+	Character->GetMesh()->SetMaterial(2, Material);
+
 	// Register DereferenceCharacter method to be called when character has died
 	Character->DeadCharacterDelegate.BindUObject(this, &AAnimalsOfWarManager::DereferenceCharacter);
-
-	Character->GetMesh()->SetMaterial(2, Material);
 
 	return Character;
 }
@@ -78,9 +79,35 @@ void AAnimalsOfWarManager::DereferenceCharacter(AAnimalsOfWarCharacter * Charact
 {
 	int RemovedItem = Player1Characters.Remove(Character);
 
+	if (Player1Characters.Num() == 0) 
+	{
+		UAnimalsOfWarGameInstance * GameInstance = Cast<UAnimalsOfWarGameInstance>
+			(GetWorld()->GetGameInstance());
+		FString Team = GameInstance->GetTeam2().ToString();
+		int HitHans = Player2Characters.Num() - Player1Characters.Num();
+		GameInstance->SetWinner(Team, HitHans);
+
+		AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>
+			(GetWorld()->GetAuthGameMode());
+		GameModeBase->ThereIsAWinner();
+	}
+
 	if (RemovedItem != 0) return;
 
 	Player2Characters.Remove(Character);
+
+	if (Player2Characters.Num() == 0)
+	{
+		UAnimalsOfWarGameInstance * GameInstance = Cast<UAnimalsOfWarGameInstance>
+			(GetWorld()->GetGameInstance());
+		FString Team = GameInstance->GetTeam1().ToString();
+		int HitHans = Player1Characters.Num() - Player2Characters.Num();
+		GameInstance->SetWinner(Team, HitHans);
+
+		AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>
+			(GetWorld()->GetAuthGameMode());
+		GameModeBase->ThereIsAWinner();
+	}
 }
 
 void AAnimalsOfWarManager::SpawnSheepsRandomly(ATargetPoint * TargetPoint)
