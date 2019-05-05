@@ -31,6 +31,7 @@ void AAnimalsOfWarGameModeBase::BeginPlay()
 
 	// Get HUD reference
 	HUD = Cast<AAnimalsOfWarHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
 	// Get PlayerController reference
 	PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
 }

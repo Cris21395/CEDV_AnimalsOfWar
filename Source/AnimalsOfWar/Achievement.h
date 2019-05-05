@@ -12,7 +12,7 @@ enum class EnumAchievement : uint8;
 class ANIMALSOFWAR_API Achievement
 {
 public:
-	Achievement(EnumAchievement AchievementType);
+	Achievement(EnumAchievement AchievementType, TWeakObjectPtr<UWorld> World);
 
 	EnumAchievement GetType() const;
 	const FName& GetDescription() const;
@@ -23,6 +23,8 @@ public:
 	void RunBehaviour();
 
 private:
+	TWeakObjectPtr<UWorld> World;
+
 	FName Description;
 	EnumAchievement AchievementType;
 };

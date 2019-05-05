@@ -3,29 +3,44 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Observer.h"
 #include "Achievement.h"
 #include "GameFramework/Actor.h"
 #include "AchievementManager.generated.h"
 
+enum class EnumEvent : uint8;
+
+DECLARE_DELEGATE_TwoParams(FAchievementManagerDelegate, class UObject*, enum class EnumEvent);
+
+/**
+ * AchievementManager class used to handle all achievements of the game
+ */
 UCLASS()
-class ANIMALSOFWAR_API AAchievementManager : public AActor, public IObserver
+class ANIMALSOFWAR_API AAchievementManager : public AActor
 {
 	GENERATED_BODY()
 	
 public:
 	AAchievementManager();
 
-	UFUNCTION(BlueprintCallable, Category = "Observer Pattern")
-		void OnNotify(UObject* Entity, EEvent Event);
+	FAchievementManagerDelegate OnNotifyDelegate;
 
 public:
+	void OnNotify(UObject* Entity, EnumEvent Event);
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 private:
-	void IncreaseCounter(EEvent Event);
+	void DecreaseCounter(EnumEvent Event);
 	void Unlock(EnumAchievement AchievementType);
 
 private:
-	TMap<EEvent, uint32> EventsCounter;
-	TMap<EnumAchievement, Achievement> Achievements;
+	TMap<EnumEvent, uint32> EventsCounter;
+};
+
+enum class EnumEvent: uint8
+{
+	EVENT_HIT_CHARACTER,
+	EVENT_ALL_CHARACTERS_DEAD
 };

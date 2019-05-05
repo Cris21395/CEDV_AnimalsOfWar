@@ -62,13 +62,17 @@ private:
 	UPROPERTY(EditAnywhere)
 		TArray<ATargetPoint*> SheepTargetPoints;
 
-	//Spawn point for Kits
+	// Spawn point for Kits
 	UPROPERTY(EditAnywhere)
 		TArray<ATargetPoint*> KitTargetPoints;
 
-	//Spawn point for grenates
+	// Spawn point for grenates
 	UPROPERTY(EditAnywhere)
 		TArray<ATargetPoint*> GrenadeTargetPoints;
+
+	// Pointer to AchievemenetManager class
+	UPROPERTY(EditAnywhere)
+		TWeakObjectPtr<class AAchievementManager> AchievementManager;
 
 	// Spawns sheeps over the world
 	void SpawnSheepsRandomly(ATargetPoint* TargetPoint);

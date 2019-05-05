@@ -4,6 +4,7 @@
 #include "AnimalsOfWarCharacter.h"
 #include "AnimalsOfWarGameModeBase.h"
 #include "AnimalsOfWarGameInstance.h"
+#include "AchievementManager.h"
 #include "AnimalsOfWarHUD.h"
 #include "EngineMinimal.h"
 #include "EngineUtils.h"
@@ -66,7 +67,6 @@ AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoin
 {
 	AAnimalsOfWarCharacter * Character = GetWorld()->SpawnActor<AAnimalsOfWarCharacter>
 		(CharacterToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
-
 	Character->GetMesh()->SetMaterial(2, Material);
 
 	// Register DereferenceCharacter method to be called when character has died
@@ -77,6 +77,8 @@ AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoin
 
 void AAnimalsOfWarManager::DereferenceCharacter(AAnimalsOfWarCharacter * Character)
 {
+	AchievementManager->OnNotifyDelegate.ExecuteIfBound(this, EnumEvent::EVENT_HIT_CHARACTER);
+
 	int RemovedItem = Player1Characters.Remove(Character);
 
 	if (Player1Characters.Num() == 0) 
