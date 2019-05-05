@@ -79,6 +79,8 @@ void AAnimalsOfWarManager::DereferenceCharacter(AAnimalsOfWarCharacter * Charact
 {
 	AchievementManager->OnNotifyDelegate.ExecuteIfBound(this, EnumEvent::EVENT_HIT_CHARACTER);
 
+	// TODO: Refactor method
+
 	int RemovedItem = Player1Characters.Remove(Character);
 
 	if (Player1Characters.Num() == 0) 
