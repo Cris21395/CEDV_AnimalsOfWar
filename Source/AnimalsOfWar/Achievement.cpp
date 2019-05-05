@@ -13,7 +13,7 @@ Achievement::Achievement(EnumAchievement AchievementType, TWeakObjectPtr<UWorld>
 	switch (AchievementType)
 	{
 	case EnumAchievement::ACHIEVEMENT_GOT_FIRST_DEATH:
-		this->Description = TEXT("[Achievement unlocked] Got first death!");
+		this->Description = TEXT("Got first death!");
 		break;
 	case EnumAchievement::ACHIEVEMENT_GOT_STREAK_DEATH:
 		// TODO: Set description
@@ -56,12 +56,13 @@ void Achievement::RunBehaviour()
 				{
 					// Get the function as named in Blueprint
 					UFunction* UnlockAchievementFunction = HUDWidget->FindFunction(TEXT("Unlock_Achievement"));
-					if (UnlockAchievementFunction) {
+					if (UnlockAchievementFunction) 
+					{
 						// Once we got the function, invoke it. Input parameters have to be provided
 						// in a struct, in the same order they are defined in the Blueprint function.
 						// In case the function has a return value, it will be specified as the last
 						// member in the struct.
-						HUD->ProcessEvent(UnlockAchievementFunction, { &Description });
+						HUDWidget->ProcessEvent(UnlockAchievementFunction, { &Description });
 					}
 				}
 			}
