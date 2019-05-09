@@ -12,8 +12,8 @@ Achievement::Achievement(EnumAchievement AchievementType, TWeakObjectPtr<UWorld>
 
 	switch (AchievementType)
 	{
-	case EnumAchievement::ACHIEVEMENT_GOT_FIRST_DEATH:
-		this->Description = TEXT("Got first death!");
+	case EnumAchievement::ACHIEVEMENT_GOT_CHARACTER_HIT:
+		this->Description = TEXT("Hit! +2 Grenades and Sheeps");
 		break;
 	case EnumAchievement::ACHIEVEMENT_GOT_STREAK_DEATH:
 		// TODO: Set description

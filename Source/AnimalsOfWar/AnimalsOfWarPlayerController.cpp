@@ -51,8 +51,10 @@ void AAnimalsOfWarPlayerController::BeginPlay()
 		Manager = *ActorItr;
 	}
 
-	// Initialize turn
-	NextTurn();
+	// Force to call BeginPlay to create the map before starting turn
+	if (!Manager->HasActorBegunPlay()) Manager->DispatchBeginPlay();
+
+	NextTurn(); // Initialize turn
 }
 
 void AAnimalsOfWarPlayerController::Tick(float DeltaTime)

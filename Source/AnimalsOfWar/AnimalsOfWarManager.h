@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AnimalsOfWarPlayerController.h"
 #include "Runtime/Engine/Classes/Engine/TargetPoint.h"
 #include "Materials/Material.h"
 #include "GameFramework/Actor.h"
 #include "AnimalsOfWarManager.generated.h"
+
+class AAnimalsOfWarCharacter;
 
 UCLASS()
 class ANIMALSOFWAR_API AAnimalsOfWarManager : public AActor
@@ -84,8 +85,15 @@ private:
 	void SpawnGrenadesRandomly(ATargetPoint* TargetPoint);
 
 	// Spawns digimons over the world
-	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, UMaterial * Material);
+	AAnimalsOfWarCharacter * SpawnDigimonsRandomly(ATargetPoint* TargetPoint, 
+		UMaterial * Material, FString CharacterName);
 
-	// Remove a character from list
-	void DereferenceCharacter(AAnimalsOfWarCharacter* Character);
+	// Called when a character has been hit
+	void HandleHitOfCharacter(AAnimalsOfWarCharacter* Character);
+
+	// Remove a character from array
+	void RemoveCharacterFromArrayWhenDie(AAnimalsOfWarCharacter* Character);
+
+	// Called when one of the players' array is empty
+	void HandleFinishOfGame(short int Team);
 };

@@ -31,40 +31,16 @@ void AAnimalsOfWarHUD::BeginPlay()
 		// Create widget and save it in the pointer
 		pHUDWidget = CreateWidget<UUserWidget>(GetOwningPlayerController(), pHUDWidgetClass);
 
-		if (pHUDWidget.IsValid()) 
+		if (pHUDWidget.IsValid())
 		{
 			pHUDWidget->AddToViewport();
 
 			// Retrieve TextBlock widgets
 			pNumGrenadesText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumGrenades");
 			pNumSheepsText = (UTextBlock*)pHUDWidget->GetWidgetFromName("NumSheeps");
+			pCurrentPlayerText = (UTextBlock*)pHUDWidget->GetWidgetFromName("Current_Player");
 			pCounterText = (UTextBlock*)pHUDWidget->GetWidgetFromName("TimeCounter");
 			pAimImage = (UImage*)pHUDWidget->GetWidgetFromName("AimImage");
-
-			
-			// Binding the progress bars to the health of the characters
-			AAnimalsOfWarManager* Manager = nullptr;
-			for (TActorIterator<AAnimalsOfWarManager> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-			{
-				// Conversion to smart pointer
-				Manager = *ActorItr;
-			}
-			for (int i = 0; i < Manager->Player1Characters.Num(); i++) 
-			{	
-				UProgressBar* allie_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Allie" + FString::FromInt(i+1))));
-				UProgressBar* opponent_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Opponent" + FString::FromInt(i+1))));
-				if (allie_health != nullptr)
-				{
-					allie_health->PercentDelegate.BindUFunction(Manager->Player1Characters[i], "GetHealthPercentage");
-					allie_health->SynchronizeProperties();
-				}
-				if (opponent_health != nullptr)
-				{
-					opponent_health->PercentDelegate.BindUFunction(Manager->Player2Characters[i], "GetHealthPercentage");
-					opponent_health->SynchronizeProperties();
-				}
-			}
-		
 		}
 	}
 }
@@ -85,22 +61,71 @@ void AAnimalsOfWarHUD::SetNumGrenades(int NumGrenades)
 	}
 }
 
-void AAnimalsOfWarHUD::UpdateCounter(int time)
+void AAnimalsOfWarHUD::SetCharacterName(FString Name)
 {
-	if (pCounterText.IsValid()) 
+	if (pCurrentPlayerText.IsValid())
 	{
-		pCounterText->SetText(FText::FromString(FString::FromInt(time)));
+		pCurrentPlayerText->SetText(FText::FromString(Name));
 	}
 }
 
-void AAnimalsOfWarHUD::LoadPossesCharacterData(AAnimalsOfWarCharacter* character)
+void AAnimalsOfWarHUD::InitializeWidgetFromHUD(TArray<APawn*> Player1Characters, TArray<APawn*> Player2Characters)
 {
-	SetNumSheeps(character->NumSheeps);
-	SetNumGrenades(character->NumGrenades);
+	// It's the same to get array 1 as array 2
+	int Size = Player1Characters.Num();
+
+	for (int i = 0; i < Size; i++)
+	{
+		AAnimalsOfWarCharacter* Player1Character = Cast<AAnimalsOfWarCharacter>(Player1Characters[i]);
+		AAnimalsOfWarCharacter* Player2Character = Cast<AAnimalsOfWarCharacter>(Player2Characters[i]);
+
+		UProgressBar* Allie_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Allie" + FString::FromInt(i + 1))));
+		UProgressBar* Opponent_health = (UProgressBar*)pHUDWidget->GetWidgetFromName(FName(*("pb_Opponent" + FString::FromInt(i + 1))));
+
+		if (Allie_health != nullptr)
+		{
+			Allie_health->PercentDelegate.BindUFunction(Player1Character, "GetHealthPercentage");
+			Allie_health->SynchronizeProperties();
+		}
+
+		if (Opponent_health != nullptr)
+		{
+			Opponent_health->PercentDelegate.BindUFunction(Player2Character, "GetHealthPercentage");
+			Opponent_health->SynchronizeProperties();
+		}
+
+		UTextBlock* Allie_Text = (UTextBlock*)pHUDWidget->GetWidgetFromName(FName(*("pt_Allie" + FString::FromInt(i + 1))));
+		UTextBlock* Opponent_Text = (UTextBlock*)pHUDWidget->GetWidgetFromName(FName(*("pt_Opponent" + FString::FromInt(i + 1))));
+
+		if (Allie_Text != nullptr)
+		{
+			Allie_Text->SetText(FText::FromString(Player1Character->CharacterName));
+		}
+
+		if (Opponent_Text != nullptr)
+		{
+			Opponent_Text->SetText(FText::FromString(Player2Character->CharacterName));
+		}
+	}
 }
 
-void AAnimalsOfWarHUD::ShowAimImage(bool isVisible) 
+void AAnimalsOfWarHUD::UpdateCounter(int Time)
 {
-	if (isVisible) pAimImage->SetVisibility(ESlateVisibility::Visible);
+	if (pCounterText.IsValid()) 
+	{
+		pCounterText->SetText(FText::FromString(FString::FromInt(Time)));
+	}
+}
+
+void AAnimalsOfWarHUD::LoadPossesCharacterData(AAnimalsOfWarCharacter* Character)
+{
+	SetNumSheeps(Character->NumSheeps);
+	SetNumGrenades(Character->NumGrenades);
+	SetCharacterName(Character->CharacterName);
+}
+
+void AAnimalsOfWarHUD::ShowAimImage(bool bIsVisible) 
+{
+	if (bIsVisible) pAimImage->SetVisibility(ESlateVisibility::Visible);
 	else pAimImage->SetVisibility(ESlateVisibility::Hidden);	
 }

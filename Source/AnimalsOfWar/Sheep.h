@@ -37,10 +37,11 @@ private:
 	UPROPERTY()
 		TWeakObjectPtr<USoundBase> AudioExplosion;
 
-public:	
+protected:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+public:	
 	// Handles the collision when this object collides with other one
 	UFUNCTION()
 		void OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);

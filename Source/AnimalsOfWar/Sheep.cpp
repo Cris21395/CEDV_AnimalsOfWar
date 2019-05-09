@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Sheep.h"
-#include "EngineMinimal.h"
 #include "AnimalsOfWarCharacter.h"
-#include "UObject/ConstructorHelpers.h"
+#include "AchievementManager.h"
 #include "Components/StaticMeshComponent.h"
-#include "Runtime/Engine/Classes/GameFramework/DamageType.h"
+#include "EngineMinimal.h"
 #include "Engine/StaticMesh.h"
+#include "Runtime/Engine/Classes/GameFramework/DamageType.h"
+#include "UObject/ConstructorHelpers.h"
 
 // Sets default values
 ASheep::ASheep()
@@ -72,6 +73,9 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 
 				// Apply damage to character
 				Character->Health -= Damage;
+
+				// Calle this delegate to notify this character has been hit
+				Character->HitCharacterDelegate.ExecuteIfBound(Character);
 
 				// Destory character if life is less or equal to 0
 				if (Character->Health <= 0)

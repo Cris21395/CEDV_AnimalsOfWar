@@ -75,6 +75,9 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 				// Apply damage to character
 				Character->Health -= Damage;
 
+				// Calle this delegate to notify this character has been hit
+				Character->HitCharacterDelegate.ExecuteIfBound(Character);
+
 				// Destory character if life is less or equal to 0
 				if (Character->Health <= 0)
 					Character->Die();

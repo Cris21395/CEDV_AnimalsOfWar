@@ -4,6 +4,7 @@
 #include "AnimalsOfWarCharacter.h"
 #include "AnimalsOfWarGameModeBase.h"
 #include "AnimalsOfWarGameInstance.h"
+#include "AnimalsOfWarPlayerController.h"
 #include "AchievementManager.h"
 #include "AnimalsOfWarHUD.h"
 #include "EngineMinimal.h"
@@ -30,9 +31,15 @@ void AAnimalsOfWarManager::BeginPlay()
 	int NumbersPawnsToBeSpawned = Player1TargetPoints.Num();
 	for (int i = 0; i < NumbersPawnsToBeSpawned; i++)
 	{
+		// Prepare parameters
+		UMaterial* Player1Material = GameInstance->GetPlayer1Material();
+		UMaterial* Player2Material = GameInstance->GetPlayer2Material();
+		FString CharacterName1 = GameInstance->GetTeam1().ToString() + FString(TEXT(" ")) + FString::FromInt(i + 1);
+		FString CharacterName2 = GameInstance->GetTeam2().ToString() + FString(TEXT(" ")) + FString::FromInt(i + 1);
+
 		// Add characters to these arrays
-		Player1Characters.Add(SpawnDigimonsRandomly(Player1TargetPoints[i], GameInstance->GetPlayer1Material()));
-		Player2Characters.Add(SpawnDigimonsRandomly(Player2TargetPoints[i], GameInstance->GetPlayer2Material()));
+		Player1Characters.Add(SpawnDigimonsRandomly(Player1TargetPoints[i], Player1Material, CharacterName1));
+		Player2Characters.Add(SpawnDigimonsRandomly(Player2TargetPoints[i], Player2Material, CharacterName2));
 	}
 
 	// Spawn sheeps
@@ -55,6 +62,14 @@ void AAnimalsOfWarManager::BeginPlay()
 	{
 		SpawnGrenadesRandomly(GrenadeTargetPoints[i]);
 	}
+
+	// Initialize widgets after spawining all objects
+	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
+	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(PlayerController->GetHUD());
+
+	// Force to call BeginPlay to save pointers
+	if (!HUD->HasActorBegunPlay()) HUD->DispatchBeginPlay();
+	HUD->InitializeWidgetFromHUD(Player1Characters, Player2Characters);
 }
 
 // Called every frame
@@ -63,55 +78,77 @@ void AAnimalsOfWarManager::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoint * TargetPoint, UMaterial* Material)
+AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoint * TargetPoint, 
+	UMaterial* Material, FString CharacterName)
 {
 	AAnimalsOfWarCharacter * Character = GetWorld()->SpawnActor<AAnimalsOfWarCharacter>
 		(CharacterToSpawn, TargetPoint->GetActorLocation(), TargetPoint->GetActorRotation());
+	Character->CharacterName = CharacterName;
 	Character->GetMesh()->SetMaterial(2, Material);
 
-	// Register DereferenceCharacter method to be called when character has died
-	Character->DeadCharacterDelegate.BindUObject(this, &AAnimalsOfWarManager::DereferenceCharacter);
+	// Register methods to be called when character execute a delegate
+	Character->HitCharacterDelegate.BindUObject(this, &AAnimalsOfWarManager::HandleHitOfCharacter);
+	Character->DeadCharacterDelegate.BindUObject(this, &AAnimalsOfWarManager::RemoveCharacterFromArrayWhenDie);
 
 	return Character;
 }
 
-void AAnimalsOfWarManager::DereferenceCharacter(AAnimalsOfWarCharacter * Character)
+void AAnimalsOfWarManager::HandleHitOfCharacter(AAnimalsOfWarCharacter * Character)
 {
-	AchievementManager->OnNotifyDelegate.ExecuteIfBound(this, EnumEvent::EVENT_HIT_CHARACTER);
+	AchievementManager->OnNotifyDelegate.ExecuteIfBound(Character, EnumEvent::EVENT_HIT_CHARACTER);
 
-	// TODO: Refactor method
+	// TODO: Place this code in AchievementManager
+	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
+	AAnimalsOfWarCharacter* PossessedCharacter = Cast<AAnimalsOfWarCharacter>(PlayerController->GetPawn());
+	PossessedCharacter->SetGrenadesCounter(+2);
+	PossessedCharacter->SetSheepsCounter(+2);
+}
 
+void AAnimalsOfWarManager::RemoveCharacterFromArrayWhenDie(AAnimalsOfWarCharacter * Character)
+{
 	int RemovedItem = Player1Characters.Remove(Character);
 
-	if (Player1Characters.Num() == 0) 
+	if (RemovedItem != 0)
 	{
-		UAnimalsOfWarGameInstance * GameInstance = Cast<UAnimalsOfWarGameInstance>
-			(GetWorld()->GetGameInstance());
-		FString Team = GameInstance->GetTeam2().ToString();
-		int HitHans = Player2Characters.Num() - Player1Characters.Num();
-		GameInstance->SetWinner(Team, HitHans);
-
-		AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>
-			(GetWorld()->GetAuthGameMode());
-		GameModeBase->ThereIsAWinner();
+		if (Player1Characters.Num() == 0)
+		{
+			// Win player 2
+			HandleFinishOfGame(1);
+		}
 	}
-
-	if (RemovedItem != 0) return;
-
-	Player2Characters.Remove(Character);
-
-	if (Player2Characters.Num() == 0)
+	else
 	{
-		UAnimalsOfWarGameInstance * GameInstance = Cast<UAnimalsOfWarGameInstance>
-			(GetWorld()->GetGameInstance());
-		FString Team = GameInstance->GetTeam1().ToString();
+		Player2Characters.Remove(Character);
+
+		if (Player2Characters.Num() == 0)
+		{
+			// Win Player 1
+			HandleFinishOfGame(0);
+		}
+	}
+}
+
+void AAnimalsOfWarManager::HandleFinishOfGame(short int Team)
+{
+	UAnimalsOfWarGameInstance * GameInstance = Cast<UAnimalsOfWarGameInstance>(GetWorld()->GetGameInstance());
+
+	// Set a Winner - Player 1
+	if (Team == 0)
+	{
+		FString NameTeam = GameInstance->GetTeam1().ToString();
 		int HitHans = Player1Characters.Num() - Player2Characters.Num();
-		GameInstance->SetWinner(Team, HitHans);
-
-		AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>
-			(GetWorld()->GetAuthGameMode());
-		GameModeBase->ThereIsAWinner();
+		GameInstance->SetWinner(NameTeam, HitHans);
 	}
+	// Set a Winner - Player 2
+	else
+	{
+		FString NameTeam = GameInstance->GetTeam2().ToString();
+		int HitHans = Player2Characters.Num() - Player1Characters.Num();
+		GameInstance->SetWinner(NameTeam, HitHans);
+	}
+
+	AAnimalsOfWarGameModeBase* GameModeBase = Cast<AAnimalsOfWarGameModeBase>(GetWorld()->GetAuthGameMode());
+	GameModeBase->ThereIsAWinner();
 }
 
 void AAnimalsOfWarManager::SpawnSheepsRandomly(ATargetPoint * TargetPoint)

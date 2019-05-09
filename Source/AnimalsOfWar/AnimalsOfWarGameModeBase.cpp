@@ -10,7 +10,6 @@
 #include "UMG.h"
 #include "WidgetBlueprintLibrary.h"
 
-
 AAnimalsOfWarGameModeBase::AAnimalsOfWarGameModeBase() 
 {
 	// Set this actor to call Tick() every frame
@@ -38,7 +37,6 @@ void AAnimalsOfWarGameModeBase::BeginPlay()
 
 void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 {
-	
 	RemainingTurnTime -= DeltaTime;
 
 	// A second 

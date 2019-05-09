@@ -32,7 +32,7 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	void DecreaseCounter(EnumEvent Event);
+	void IncreaseCounter(EnumEvent Event);
 	void Unlock(EnumAchievement AchievementType);
 
 private:

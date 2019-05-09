@@ -56,6 +56,7 @@ AAnimalsOfWarCharacter::AAnimalsOfWarCharacter() : Health(100), NumSheeps(0), Nu
 
 	// Allow overlap events
 	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
+
 	// Register custom event
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AAnimalsOfWarCharacter::BeginOverlap);
 }
@@ -230,7 +231,6 @@ void AAnimalsOfWarCharacter::Die()
 {
 	Health = 0; // Set to 0 so that Health cannot be negative
 
-	// Run delegate in order to remove this reference in Manager Character's list
 	DeadCharacterDelegate.ExecuteIfBound(this);
 
 	// Reset time

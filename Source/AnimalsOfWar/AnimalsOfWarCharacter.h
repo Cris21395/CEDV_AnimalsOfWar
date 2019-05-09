@@ -35,14 +35,20 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
 
-	// Called when a character is about to die
+	// Called when a character has been hit
+	FCharacterDelegate HitCharacterDelegate;
+
+	// Called when a character dies
 	FCharacterDelegate DeadCharacterDelegate;
 
 	// Number of sheeps
 	int NumSheeps;
 
-	// Number of grenates
+	// Number of grenades
 	int NumGrenades;
+
+	// Name of the character
+	FString CharacterName;
 
 	// Character's health
 	float Health;

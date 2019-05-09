@@ -6,7 +6,6 @@
 #include "GameFramework/HUD.h"
 #include "AnimalsOfWarHUD.generated.h"
 
-
 class AAnimalsOfWarCharacter;
 
 UCLASS()
@@ -28,6 +27,10 @@ public:
 	// Variable to hold specifically the sheeps TextBlock in the widget
 	UPROPERTY()
 		TWeakObjectPtr<class UTextBlock> pNumSheepsText;
+
+	// Variable to hold the character that is being possessed
+	UPROPERTY()
+		TWeakObjectPtr<class UTextBlock> pCurrentPlayerText;
 
 	// Variable to hold specifically the counter TextBlock
 	UPROPERTY()
@@ -53,15 +56,22 @@ public:
 	UFUNCTION()
 		void SetNumGrenades(int NumSheeps);
 
+	UFUNCTION()
+		void SetCharacterName(FString Name);
+
+	// Initialize HUD widgets
+	UFUNCTION()
+		void InitializeWidgetFromHUD(TArray<APawn*> Player1Characters, TArray<APawn*> Player2Characters);
+
 	// Update the counter text widget
 	UFUNCTION()
-		void UpdateCounter(int time);
+		void UpdateCounter(int Time);
 
 	// When a character is possed must call this function
 	UFUNCTION()
-		void LoadPossesCharacterData(AAnimalsOfWarCharacter* character);
+		void LoadPossesCharacterData(AAnimalsOfWarCharacter* Character);
 
 	// Set Visible Aim Image
 	UFUNCTION()
-		void ShowAimImage(bool isVisible);
+		void ShowAimImage(bool bIsVisible);
 };
