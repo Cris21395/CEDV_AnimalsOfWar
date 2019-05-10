@@ -14,11 +14,15 @@
 AAnimalsOfWarHUD::AAnimalsOfWarHUD()
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> HUDWidgetObject (TEXT("/Game/Blueprints/UI/BP_HUDCharacter"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> ChangeTurnWidgetObject(TEXT("/Game/Blueprints/UI/BP_EndTurnWidget"));
 
 	// Save pointer to widgets
 	if (HUDWidgetObject.Class) 
 	{
 		pHUDWidgetClass = HUDWidgetObject.Class;
+	}
+	if (ChangeTurnWidgetObject.Class) {
+		pChangeTurnClass = ChangeTurnWidgetObject.Class;
 	}
 }
 
@@ -43,6 +47,8 @@ void AAnimalsOfWarHUD::BeginPlay()
 			pAimImage = (UImage*)pHUDWidget->GetWidgetFromName("AimImage");
 		}
 	}
+
+	
 }
 
 void AAnimalsOfWarHUD::SetNumSheeps(int NumSheeps)
@@ -128,4 +134,18 @@ void AAnimalsOfWarHUD::ShowAimImage(bool bIsVisible)
 {
 	if (bIsVisible) pAimImage->SetVisibility(ESlateVisibility::Visible);
 	else pAimImage->SetVisibility(ESlateVisibility::Hidden);	
+}
+
+void AAnimalsOfWarHUD::ShowEndTurnFeedback() 
+{
+	// Show animated notification of turn change
+	// Get references from Change Turn Widget
+	if (pChangeTurnClass)
+	{
+		pChangeTurnWidget = CreateWidget<UUserWidget>(GetOwningPlayerController(), pChangeTurnClass);
+		if (pChangeTurnWidget.IsValid())
+		{
+			pChangeTurnWidget->AddToViewport();
+		}
+	}
 }

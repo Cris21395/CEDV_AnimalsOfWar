@@ -43,6 +43,13 @@ public:
 	// Reference to HUD Widget class
 	class UClass* pHUDWidgetClass;
 
+	// Referenc to Change Turn Widget
+	class UClass* pChangeTurnClass;
+
+	// Widget for turn change
+	UPROPERTY()
+		TWeakObjectPtr<class UUserWidget> pChangeTurnWidget;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -74,4 +81,8 @@ public:
 	// Set Visible Aim Image
 	UFUNCTION()
 		void ShowAimImage(bool bIsVisible);
+
+	// Shows the change turn text
+	UFUNCTION()
+		void ShowEndTurnFeedback();
 };

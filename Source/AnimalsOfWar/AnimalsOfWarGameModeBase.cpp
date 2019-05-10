@@ -69,7 +69,7 @@ void AAnimalsOfWarGameModeBase::EndTurn()
 		Character->DisableInput(PlayerController.Get());
 
 	// SHOW FEEDBACK TEXT AND PLAY ANIMATION AS IN THE BATTLESHIOGAME
-	//HUD->ShowEndTurnFeedback();
+	HUD->ShowEndTurnFeedback();
 	
 }
 

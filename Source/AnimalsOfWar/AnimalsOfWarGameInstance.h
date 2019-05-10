@@ -36,6 +36,7 @@ private:
 	UPROPERTY()
 		TMap<FString, int> Winner;
 
+
 public:
 	// Set Player 1 material
 	UFUNCTION(BlueprintCallable, Category = PlayerMaterial)
