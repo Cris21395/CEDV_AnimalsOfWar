@@ -64,7 +64,8 @@ void AAnimalsOfWarManager::BeginPlay()
 	}
 
 	// Initialize widgets after spawining all objects
-	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
+	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>
+		(GetWorld()->GetFirstPlayerController());
 	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(PlayerController->GetHUD());
 
 	// Force to call BeginPlay to save pointers
@@ -96,12 +97,6 @@ AAnimalsOfWarCharacter * AAnimalsOfWarManager::SpawnDigimonsRandomly(ATargetPoin
 void AAnimalsOfWarManager::HandleHitOfCharacter(AAnimalsOfWarCharacter * Character)
 {
 	AchievementManager->OnNotifyDelegate.ExecuteIfBound(Character, EnumEvent::EVENT_HIT_CHARACTER);
-
-	// TODO: Place this code in AchievementManager
-	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
-	AAnimalsOfWarCharacter* PossessedCharacter = Cast<AAnimalsOfWarCharacter>(PlayerController->GetPawn());
-	PossessedCharacter->SetGrenadesCounter(+2);
-	PossessedCharacter->SetSheepsCounter(+2);
 }
 
 void AAnimalsOfWarManager::RemoveCharacterFromArrayWhenDie(AAnimalsOfWarCharacter * Character)
