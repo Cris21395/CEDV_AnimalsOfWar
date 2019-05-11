@@ -71,6 +71,7 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 			{
 				// Fire explosion if grenades collides with character by being thrown
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), AudioExplosion.Get(), GetActorLocation());
 
 				// Apply damage to character
 				Character->Health -= Damage;
@@ -92,6 +93,7 @@ void AGrenade::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpuls
 		{
 			// Fire explosion if grenades collides with other thing is not character
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), AudioExplosion.Get(), GetActorLocation());
 
 			// Apply radial damage if grenade does not hit to character
 			UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, Hit.Location, 600.0f, UDamageType::StaticClass(),

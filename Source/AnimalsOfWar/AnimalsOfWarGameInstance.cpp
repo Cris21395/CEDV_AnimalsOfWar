@@ -2,6 +2,7 @@
 
 #include "AnimalsOfWarGameInstance.h"
 
+
 void UAnimalsOfWarGameInstance::SetPlayer1Material(UMaterialInterface * Player1Material)
 {
 	Player1MaterialPointer = Player1Material->GetMaterial();

@@ -70,6 +70,7 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 			{
 				// Fire explosion
 				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), AudioExplosion.Get(), GetActorLocation());
 
 				// Apply damage to character
 				Character->Health -= Damage;
@@ -91,6 +92,7 @@ void ASheep::OnHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse,
 		{
 			// Fire explosion if grenades collides with other thing is not character
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticleSystem.Get(), Hit.Location);
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), AudioExplosion.Get(), GetActorLocation());
 
 			// Apply radial damage if sheep does not hit to character
 			UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, Hit.Location, 500.0f, UDamageType::StaticClass(),
