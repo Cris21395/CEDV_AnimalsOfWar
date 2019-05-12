@@ -7,8 +7,6 @@
 #include "Materials/Material.h"
 #include "AnimalsOfWarGameInstance.generated.h"
 
-
-
 /**
  * Custom Game instance class that store data for being carried between levels
  */
@@ -37,7 +35,6 @@ private:
 	// Winner of the game
 	UPROPERTY()
 		TMap<FString, int> Winner;
-
 
 public:
 	// Set Player 1 material

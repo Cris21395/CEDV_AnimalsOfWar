@@ -57,20 +57,26 @@ void AAnimalsOfWarGameModeBase::Tick(float DeltaTime)
 
 void AAnimalsOfWarGameModeBase::ThereIsAWinner()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Maps/Records"), TRAVEL_Absolute);
+	// Spend 5 seconds to load records map. Without it, map is run so quickly
+	FTimerDelegate TimerDelegate;
+	FTimerHandle Handle;
+	TimerDelegate.BindLambda([&]() 
+	{ 
+		UGameplayStatics::OpenLevel(GetWorld(), TEXT("/Game/Maps/Records"), TRAVEL_Absolute);
+	});
+	GetWorld()->GetTimerManager().SetTimer(Handle, TimerDelegate, 3.0f, false);
 }
 
 void AAnimalsOfWarGameModeBase::EndTurn()
 {
 	//Obtain pawn of this character
 	AAnimalsOfWarCharacter * Character = Cast<AAnimalsOfWarCharacter>(PlayerController.Get()->GetPawn());
-	//Disable Input for these character
-	if (Character) 
-		Character->DisableInput(PlayerController.Get());
 
-	// SHOW FEEDBACK TEXT AND PLAY ANIMATION AS IN THE BATTLESHIOGAME
+	//Disable Input for these character
+	if (Character) Character->DisableInput(PlayerController.Get());
+
+	// Show feedback text and play animation
 	HUD->ShowEndTurnFeedback();
-	
 }
 
 void AAnimalsOfWarGameModeBase::ChangeTurn()
@@ -85,8 +91,6 @@ void AAnimalsOfWarGameModeBase::ChangeTurn()
 	HUD->ShowAimImage(false);
 
 	//Enable Input when you change the character
-	//MUST BE BEFORE THE METHOD BECAUSE AFTER IT WILL CHANGE THE PAWN
-	if (Character) 
-		Character->EnableInput(PlayerController.Get());
+	if (Character) Character->EnableInput(PlayerController.Get());
 	PlayerController->NextTurn();
 }

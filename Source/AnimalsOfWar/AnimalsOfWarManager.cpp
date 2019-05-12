@@ -64,8 +64,7 @@ void AAnimalsOfWarManager::BeginPlay()
 	}
 
 	// Initialize widgets after spawining all objects
-	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>
-		(GetWorld()->GetFirstPlayerController());
+	AAnimalsOfWarPlayerController* PlayerController = Cast<AAnimalsOfWarPlayerController>(GetWorld()->GetFirstPlayerController());
 	AAnimalsOfWarHUD* HUD = Cast<AAnimalsOfWarHUD>(PlayerController->GetHUD());
 
 	// Force to call BeginPlay to save pointers
