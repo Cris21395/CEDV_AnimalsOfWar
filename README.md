@@ -2,7 +2,7 @@
 
 ## About the project
 
-(Full fill)
+Animals of war is a local multiplayer turned-based game where creatures participate in a combat. It is developed as 3D game which contains sheeps and grenades as projectiles in order to be thrown by creatures and kit of medicines so that they can save their lifes. Project enterily developed with Unreal Engine 4 through Blueprints and C++.
 
 ## Software
 
@@ -17,4 +17,4 @@
 
 ## Video
 
-Coming soon.
+In the next link [Animals Of War](https://youtu.be/udZ4U5NJqqo) you can see the game developed as the second mini-game of CEDV.
