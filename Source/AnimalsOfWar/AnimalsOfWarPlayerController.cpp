@@ -15,29 +15,38 @@ void AAnimalsOfWarPlayerController::NextTurn()
 {
 	TArray<APawn*> Characters;
 	int IndexAux = 0;
-	
+
 	if (Turn)
 	{
 		Characters = Manager->Player1Characters;
-		Player1PossesedIndex = ++Player1PossesedIndex % Characters.Num();
+
+		if (Characters.Num() != 0)
+			Player1PossesedIndex = ++Player1PossesedIndex % Characters.Num();
+
 		IndexAux = Player1PossesedIndex;
 	}
 	else
 	{
 		Characters = Manager->Player2Characters;
-		Player2PossesedIndex = ++Player2PossesedIndex % Characters.Num();
+
+		if (Characters.Num() != 0)
+			Player2PossesedIndex = ++Player2PossesedIndex % Characters.Num();
+
 		IndexAux = Player2PossesedIndex;
 	}
 
-	// Posses next character
-	Possess(Characters[IndexAux]);
+	if (Characters.Num() != 0)
+	{
+		// Posses next character
+		Possess(Characters[IndexAux]);
 
-	// Load in HUD possessed character data
-	AAnimalsOfWarHUD* HUD = (AAnimalsOfWarHUD*)GetHUD();
-	HUD->LoadPossesCharacterData((AAnimalsOfWarCharacter*)Characters[IndexAux]);
+		// Load in HUD possessed character data
+		AAnimalsOfWarHUD* HUD = (AAnimalsOfWarHUD*)GetHUD();
+		HUD->LoadPossesCharacterData((AAnimalsOfWarCharacter*)Characters[IndexAux]);
 
-	// Switch between 0 and 1
-	Turn = 1 - Turn;
+		// Switch between 0 and 1
+		Turn = 1 - Turn;
+	}
 }
 
 void AAnimalsOfWarPlayerController::BeginPlay()
